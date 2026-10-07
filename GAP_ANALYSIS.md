@@ -110,12 +110,12 @@ Legenda
 | Funzione | FreeCAD | Gravità | Sforzo | Note |
 |---|---|---|---|---|
 | Viste standard, gruppo di proiezione, sezioni, dettagli, interrotte | ✅ | — | — | TechDraw |
-| Palette delle viste / viste automatiche | 🟡 | M | S | `DrawProjGroup` c'è, manca l'inserimento "drag dalla palette" |
+| Palette delle viste / viste automatiche | ✅ Forge | B | S | Viste automatiche con scala unificata (M7); niente palette trascinabile |
 | Importa quote di modello | ❌ | M | L | |
 | Quotatura automatica (ordinata, da riferimento) | 🟡 | M | M | Estensioni TechDraw (catene/coordinate) manuali |
-| BOM collegata in tavola + palloncini automatici | 🟡 | **A** | M | Solo `DrawViewSpreadsheet`; palloncini manuali → M7 |
+| BOM collegata in tavola + palloncini automatici | ✅ Forge | — | — | "Tavola automatica" (M7) |
 | Tabella fori | ❌ | B | M | |
-| Cartiglio con proprietà personalizzate | 🟡 | M | S | Campi template + `FillTemplateFields` |
+| Cartiglio con proprietà personalizzate | ✅ Forge | — | — | Compilato automaticamente (M7) |
 | Export PDF/DXF | ✅ | — | — | DWG solo con convertitore esterno (ODA) |
 
 ## 9. Configurazioni / equazioni

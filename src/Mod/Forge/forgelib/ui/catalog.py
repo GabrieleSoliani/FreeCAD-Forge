@@ -321,6 +321,7 @@ TABS = (
         "drawing",
         "Tavola",
         (
+            "Forge_AutoDrawing",
             "TechDraw_PageDefault",
             "TechDraw_PageTemplate",
             SEPARATOR,

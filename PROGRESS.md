@@ -69,6 +69,13 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
   - [ ] Residui (richiedono modifiche al solutore C++ OndselSolver): accoppiamenti larghezza/camma/slot, limiti
         generalizzati, smart mates con Alt-trascinamento, componenti flessibili, modifica in contesto avanzata.
 
+- **M7 — Messa in tavola: completata (parziale)** (tag `forge-m7`).
+  - [x] `forgelib/drawing.py` + comando "Tavola automatica" (scheda Tavola): A3 ISO 5457, viste frontale/superiore/laterale
+        in primo diedro + assonometria, scala unificata automatica, cartiglio compilato (titolo, autore, data, scala,
+        materiale, tolleranze ISO 2768-m, tipo documento); per gli assiemi distinta (raggruppata, con viteria per
+        designazione e serie di componenti) come foglio collegato e palloncini numerati sulla vista frontale.
+  - [ ] Residui: importazione delle quote di modello, quotatura automatica ordinata, tabella fori, DWG (serve ODA).
+
 ## Ambiente e comandi (Windows locale)
 
 Toolchain: pixi 0.81 + MSVC 14.44 (Build Tools 2022), Ninja, ccache, Qt 6.11, Python 3.13, OCCT 8.0.
@@ -106,7 +113,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M7 — Messa in tavola: viste automatiche, BOM collegata con palloncini automatici, cartiglio UNI con proprietà.
+M4 — Feature mancanti: configurazioni con soppressione, gestore equazioni unificato, nervatura (rib), Instant3D.
 
 ## Problemi noti
 
@@ -219,4 +226,10 @@ default vero), `LastTab` (stringa).
 2. Selezionare un componente → Serie di componenti: compaiono 2 copie; nelle proprietà cambiare Count, Spacing, Mode=Circolare.
    Spostando il componente originale le copie lo seguono.
 3. Selezionare un componente e (con Ctrl) una faccia piana → Specchia componente: compare la versione "(opposto)".
+
+### M7 — Tavola automatica
+1. Selezionare un pezzo → scheda Tavola → Tavola automatica: si apre una pagina A3 con tre viste in primo diedro,
+   un'assonometria e il cartiglio compilato (titolo = nome del pezzo, scala, data, tolleranze generali).
+2. Selezionare piastra + 2 viti uguali + 1 dado → Tavola automatica: in alto a destra la distinta (3 righe, viti con
+   quantità 2) e tre palloncini numerati sulla vista frontale. Verificare che le frecce puntino ai componenti giusti.
 

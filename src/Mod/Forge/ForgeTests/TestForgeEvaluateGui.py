@@ -223,3 +223,29 @@ class TestAssemblyGui(unittest.TestCase):
         finally:
             FreeCADGui.Selection.clearSelection()
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestDrawingGui(unittest.TestCase):
+    def test_auto_drawing_for_selection(self):
+        from forgelib import drawing_gui
+        from forgelib.features import fasteners
+
+        doc = FreeCAD.newDocument("ForgeDrawingGui")
+        try:
+            plate = doc.addObject("Part::Box", "Piastra")
+            screw = fasteners.make_fastener(doc, "ISO 4017", "M6", 20,
+                                            FreeCAD.Placement(Vector(5, 5, 10), FreeCAD.Rotation()))
+            doc.recompute()
+            FreeCADGui.Selection.clearSelection()
+            FreeCADGui.Selection.addSelection(plate)
+            FreeCADGui.Selection.addSelection(screw)
+            sources = drawing_gui.drawing_sources(doc)
+            self.assertEqual(sources, [plate, screw])
+            page, info, rows = drawing_gui.make_auto_drawing(doc, sources)
+            self.assertEqual(len(rows), 2)
+            balloons = [o for o in page.Views if o.TypeId == "TechDraw::DrawViewBalloon"]
+            self.assertEqual(len(balloons), 2)
+            self.assertEqual(page.Template.EditableTexts["document_type"], "Disegno d'assieme")
+        finally:
+            FreeCADGui.Selection.clearSelection()
+            FreeCAD.closeDocument(doc.Name)
