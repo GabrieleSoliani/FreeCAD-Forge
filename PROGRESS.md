@@ -13,7 +13,9 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         automatico in base al contesto (tavola attiva, schizzo in modifica, assieme attivo).
   - [x] M1.2 Modifica dello schizzo restando in Forge (patch in `ViewProviderSketch`, vedi
         `CORE_PATCHES.md`); in modifica la scheda Schizzo mostra le toolbar "Disegno" e "Vincoli".
-  - [ ] M1.3 Preference pack "Forge" (navigazione SolidWorks, scorciatoie, colori).
+  - [x] M1.3 Impostazioni stile SolidWorks (navigazione, Forge all'avvio, scorciatoie F, Ctrl+1..8,
+        Ctrl+B) applicabili e annullabili dal menu Forge, proposte alla prima attivazione. Al posto di un
+        preference pack (vedi `DECISIONS.md`).
   - [ ] M1.4 Barra heads-up nella vista.
   - [ ] M1.5 Rollback bar nell'albero (pilotando `Body.Tip`), cartelle, riordino con controllo dipendenze.
   - [ ] M1.6 Menu radiale contestuale / mouse gestures.
@@ -55,17 +57,17 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M1.3: preference pack "Forge" (navigazione SolidWorks, scorciatoie stile SolidWorks, colori).
+M1.4: barra heads-up nella vista 3D.
 
 ## Problemi noti
 
-- **Abort intermittente nei test GUI di Forge**: `FreeCAD.exe -t ForgeTests.TestForgeGui` termina circa
-  1 volta su 10–15 con `Abnormal program termination... Break signal occurred` (SIGABRT) e senza output
-  su stdout. Con lo stesso binario `-t TestPartDesignGui` di upstream: 0 su 15. Con `faulthandler` o con
-  marcatori su file il problema non si è riprodotto (0/30): dipende dai tempi. Ipotesi da verificare:
-  distruzione degli oggetti PySide (QToolBar/QTimer del command manager) all'uscita, oppure import dei
-  comandi Assembly/TechDrawTools fuori dal loro workbench. Quando si ripresenta nell'uso reale, annotare qui
-  in che momento.
+- (Risolto 2026-10-07) Abort all'uscita nei test GUI: causato dai wrapper PySide creati per i widget
+  delle viste MDI (`QMdiArea.activeSubWindow().widget()`) nel timer di contesto; ora si usa
+  `Gui.ActiveDocument.ActiveView`. Regola: **non creare wrapper PySide dei widget delle viste** nel codice
+  Forge. Verificato 30/30 esecuzioni senza abort.
+- (Risolto) Dopo un cambio di workbench `ToolBarManager` riapplicava in differita la visibilità salvata
+  delle toolbar, riaccendendo la toolbar di un'altra scheda: il command manager ora tiene allineati i
+  parametri `BaseApp/MainWindow/Toolbars`.
 - `Surface_Cut` è disabilitato in upstream (`src/Mod/Surface/Gui/Command.cpp`): non è nel catalogo Forge.
 
 ## DA VERIFICARE A VIDEO
@@ -90,3 +92,11 @@ M1.3: preference pack "Forge" (navigazione SolidWorks, scorciatoie stile SolidWo
 
 Parametri (Strumenti → Modifica parametri → `BaseApp/Preferences/Mod/Forge`): `AutoSwitchTabs` (bool,
 default vero), `LastTab` (stringa).
+
+### M1.3 — Impostazioni stile SolidWorks
+1. Alla prima attivazione di Forge compare la domanda "Applicare le impostazioni in stile SolidWorks?". Rispondere Sì.
+2. Verificare: navigazione (tasto centrale ruota, Ctrl+centrale sposta, rotella zoom sul cursore), `F` adatta la vista,
+   `Ctrl+1`…`Ctrl+7` viste standard, `Ctrl+8` normale alla faccia selezionata, `Ctrl+B` ricostruisce.
+3. Riavviare FreeCAD: deve aprirsi direttamente in Forge.
+4. Menu Forge → "Ripristina impostazioni precedenti": tutto torna come prima (navigazione, scorciatoie, workbench di avvio).
+

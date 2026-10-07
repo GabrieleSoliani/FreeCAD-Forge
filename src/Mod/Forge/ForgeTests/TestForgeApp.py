@@ -103,3 +103,33 @@ class TestContext(unittest.TestCase):
         follower = TabFollower()
         self.assertIsNone(follower.update(Context(drawing_page_active=True), "drawing"))
         self.assertIsNone(follower.update(Context(), "drawing"))
+
+
+class TestSettings(unittest.TestCase):
+    def test_plan_sets_wanted_and_clears_conflicts(self):
+        from forgelib.settings import plan_shortcuts
+
+        current = {"Fit": "V, F", "Other": "F", "Front": "1", "Free": "Ctrl+1", "Same": "Ctrl+B"}
+        wanted = {"Fit": "F", "Front": "Ctrl+1", "Same": "Ctrl+B", "Missing": "Ctrl+9"}
+        changes = plan_shortcuts(current, wanted)
+        self.assertEqual(
+            changes, {"Fit": "F", "Front": "Ctrl+1", "Other": "", "Free": ""}
+        )
+
+    def test_plan_ignores_spacing_and_case(self):
+        from forgelib.settings import plan_shortcuts
+
+        self.assertEqual(plan_shortcuts({"A": "ctrl+b", "B": "Ctrl + B"}, {"A": "Ctrl+B"}), {"B": ""})
+
+    def test_backup_roundtrip(self):
+        from forgelib.settings import decode_backup, encode_backup
+
+        params = [("G", "String", "N", None), ("G", "Bool", "B", True), ("H", "Int", "I", 3)]
+        shortcuts = {"Cmd": None, "Cmd2": "Ctrl+K"}
+        self.assertEqual(decode_backup(encode_backup(params, shortcuts)), (params, shortcuts))
+
+    def test_shortcut_table_has_unique_keys(self):
+        from forgelib.settings import SHORTCUTS
+
+        keys = [k.lower() for k in SHORTCUTS.values()]
+        self.assertEqual(len(keys), len(set(keys)))

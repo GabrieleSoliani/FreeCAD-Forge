@@ -8,6 +8,8 @@ SET(Forge_SRCS
 
 SET(ForgeLib_SRCS
     forgelib/__init__.py
+    forgelib/commands.py
+    forgelib/settings.py
     forgelib/ui/__init__.py
     forgelib/ui/catalog.py
     forgelib/ui/context.py

@@ -17,6 +17,8 @@ class TestForgeWorkbench(unittest.TestCase):
         FreeCADGui.activateWorkbench("ForgeWorkbench")
         FreeCADGui.updateGui()
         self.mw = FreeCADGui.getMainWindow()
+        # niente timer durante i test: il contesto si aggiorna solo con _follow_context() esplicito
+        FreeCADGui.getWorkbench("ForgeWorkbench")._manager._timer.stop()
 
     def tearDown(self):
         FreeCADGui.activateWorkbench(self.previous)
@@ -114,6 +116,24 @@ class TestForgeWorkbench(unittest.TestCase):
         finally:
             FreeCAD.closeDocument(doc.Name)
 
+    def test_drawing_page_switches_to_drawing_tab(self):
+        if "TechDraw_PageDefault" not in FreeCADGui.listCommands():
+            self.skipTest("TechDraw non compilato")
+        manager = FreeCADGui.getWorkbench("ForgeWorkbench")._manager
+        doc = FreeCAD.newDocument("ForgeDrawingTab")
+        try:
+            manager.set_current("features")
+            manager._follow_context()
+            FreeCADGui.runCommand("TechDraw_PageDefault")
+            FreeCADGui.updateGui()
+            manager._follow_context()
+            self.assertEqual(manager.current_key(), "drawing")
+            self.assertEqual(self._visible_forge_toolbars(), ["Forge Tavola"])
+        finally:
+            FreeCAD.closeDocument(doc.Name)
+            FreeCADGui.updateGui()
+            manager._follow_context()
+
     def test_sketch_edit_outside_forge_unchanged(self):
         """Fuori da Forge la modifica dello schizzo passa ancora allo Sketcher (comportamento upstream)."""
         doc = FreeCAD.newDocument("ForgeSketchEditPD")
@@ -140,3 +160,47 @@ class TestForgeWorkbench(unittest.TestCase):
             self.assertEqual(FreeCADGui.activeWorkbench().name(), "ForgeWorkbench")
         finally:
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestForgeSettings(unittest.TestCase):
+    def _snapshot(self):
+        from forgelib import settings
+
+        params = {(g, n): FreeCAD.ParamGet(g).GetContents() for g, _, n, _ in settings.PARAMETERS}
+        shortcuts = FreeCAD.ParamGet(settings.SHORTCUT_PARAMS).GetContents()
+        return params, sorted(shortcuts or [])
+
+    def test_apply_and_revert_restore_exact_state(self):
+        from forgelib import settings
+
+        if settings.is_applied():
+            self.skipTest("impostazioni Forge già applicate dall'utente")
+        before = self._snapshot()
+        try:
+            self.assertTrue(settings.apply())
+            self.assertFalse(settings.apply(), "una seconda applicazione non deve fare nulla")
+            view = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/View")
+            self.assertEqual(view.GetString("NavigationStyle"), "Gui::SolidWorksNavigationStyle")
+            for cmd, key in settings.SHORTCUTS.items():
+                if FreeCADGui.Command.get(cmd) is None:
+                    continue
+                self.assertEqual(FreeCADGui.Command.get(cmd).getShortcut(), key)
+                owners = [
+                    name
+                    for name in FreeCADGui.Command.listAll()
+                    if FreeCADGui.Command.get(name).getShortcut().replace(" ", "").lower()
+                    == key.lower()
+                ]
+                self.assertEqual(owners, [cmd], f"conflitto su {key}")
+        finally:
+            settings.revert()
+        self.assertFalse(settings.is_applied())
+        self.assertEqual(self._snapshot(), before)
+
+
+def tearDownModule():
+    # In modalità test FreeCAD esce con SystemExit senza chiudere la finestra principale, quindi
+    # mainWindowClosed/aboutToQuit non arrivano: si spegne il command manager come all'uscita reale.
+    manager = getattr(FreeCADGui.getWorkbench("ForgeWorkbench"), "_manager", None)
+    if manager is not None:
+        manager.shutdown()

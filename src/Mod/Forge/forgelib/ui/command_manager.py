@@ -14,6 +14,7 @@ from forgelib.ui import catalog
 from forgelib.ui.context import Context, TabFollower
 
 PARAM_PATH = "User parameter:BaseApp/Preferences/Mod/Forge"
+TOOLBAR_PARAMS = "User parameter:BaseApp/MainWindow/Toolbars"
 TABBAR_OBJECT_NAME = "ForgeCommandManager"
 POLL_INTERVAL_MS = 300
 
@@ -23,25 +24,25 @@ def _params():
 
 
 def current_context():
-    """Legge dalla GUI lo stato che guida il cambio automatico di scheda."""
-    drawing = False
-    mdi = FreeCADGui.getMainWindow().findChild(QtWidgets.QMdiArea)
-    if mdi is not None:
-        sub = mdi.activeSubWindow()
-        widget = sub.widget() if sub is not None else None
-        if widget is not None:
-            drawing = widget.metaObject().className() == "TechDrawGui::MDIViewPage"
+    """Legge dalla GUI lo stato che guida il cambio automatico di scheda.
 
+    Usa solo i wrapper Python di FreeCAD: creare wrapper PySide dei widget delle viste
+    (es. ``QMdiArea.activeSubWindow().widget()``) provoca un abort all'uscita di FreeCAD
+    quando quelle viste sono state chiuse nel frattempo.
+    """
+    drawing = False
     sketch = False
     assembly = False
     gdoc = FreeCADGui.ActiveDocument
     if gdoc is not None:
+        view = gdoc.ActiveView
+        drawing = type(view).__name__ == "MDIViewPagePy"
         vp = gdoc.getInEdit()
         if vp is not None and hasattr(vp, "Object"):
             sketch = vp.Object.isDerivedFrom("Sketcher::SketchObject")
-        if not drawing:
+        if view is not None and not drawing:
             try:
-                active = gdoc.ActiveView.getActiveObject("part")
+                active = view.getActiveObject("part")
             except Exception:
                 active = None
             assembly = active is not None and active.isDerivedFrom("Assembly::AssemblyObject")
@@ -82,6 +83,28 @@ class CommandManager(QtCore.QObject):
         mw.addToolBar(QtCore.Qt.TopToolBarArea, self._toolbar)
         self._toolbar.hide()
 
+        # All'uscita i segnali Qt non devono più richiamare codice Python: la distruzione della
+        # GUI rilascia i workbench Python mentre i widget sono ancora vivi.
+        self._closed = False
+        mw.mainWindowClosed.connect(self.shutdown)
+        QtWidgets.QApplication.instance().aboutToQuit.connect(self.shutdown)
+
+    def shutdown(self):
+        """Ferma il timer e scollega tutti i segnali verso Python. Idempotente."""
+        if self._closed:
+            return
+        self._closed = True
+        self._timer.stop()
+        for signal, slot in (
+            (self._timer.timeout, self._follow_context),
+            (self._tabbar.currentChanged, self._apply),
+            (self._tabbar.tabBarClicked, self._remember),
+        ):
+            try:
+                signal.disconnect(slot)
+            except (RuntimeError, TypeError):
+                pass
+
     # --- API ---------------------------------------------------------------------------
 
     def current_key(self):
@@ -100,6 +123,8 @@ class CommandManager(QtCore.QObject):
 
     def activate(self):
         """Mostra il command manager (all'attivazione del workbench Forge)."""
+        if self._closed:
+            return
         self._layout_once()
         self._toolbar.show()
         key = _params().GetString("LastTab", catalog.DEFAULT_TAB)
@@ -148,11 +173,17 @@ class CommandManager(QtCore.QObject):
         shown = set()
         if 0 <= index < len(self._tabs):
             shown = set(self.visible_toolbars(self._tabs[index]))
+        # ToolBarManager riapplica in differita la visibilità salvata in questi parametri
+        # (dopo un cambio di workbench): li teniamo allineati alla scheda scelta.
+        prefs = FreeCAD.ParamGet(TOOLBAR_PARAMS)
         for tab in self._tabs:
             for name, _ in tab.all_toolbars():
+                visible = name in shown
+                if prefs.GetBool(name, not visible) != visible:
+                    prefs.SetBool(name, visible)
                 toolbar = self.toolbar(name)
                 if toolbar is not None:
-                    toolbar.setVisible(name in shown)
+                    toolbar.setVisible(visible)
 
     def _follow_context(self):
         try:

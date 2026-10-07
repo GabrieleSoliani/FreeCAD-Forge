@@ -31,8 +31,10 @@ class ForgeWorkbench(Workbench):
         import importlib
         import FreeCAD
         import FreeCADGui
+        from forgelib import commands as forge_commands
         from forgelib.ui import catalog
 
+        forge_commands.register()
         for name, required in catalog.GUI_MODULES:
             try:
                 importlib.import_module(name)
@@ -59,6 +61,7 @@ class ForgeWorkbench(Workbench):
             commands, _ = catalog.resolve_commands(tab.commands, available)
             if commands:
                 self.appendMenu(["&Forge", tab.label], commands)
+        self.appendMenu("&Forge", ["Separator"] + forge_commands.SETTINGS_COMMANDS)
 
     def Activated(self):
         from forgelib.ui import catalog
@@ -67,6 +70,10 @@ class ForgeWorkbench(Workbench):
         if self._manager is None:
             self._manager = CommandManager(catalog.TABS)
         self._manager.activate()
+
+        from forgelib import commands as forge_commands
+
+        forge_commands.offer_settings_once()
 
     def Deactivated(self):
         if self._manager is not None:
