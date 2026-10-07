@@ -133,3 +133,68 @@ class TestSettings(unittest.TestCase):
 
         keys = [k.lower() for k in SHORTCUTS.values()]
         self.assertEqual(len(keys), len(set(keys)))
+
+
+class TestRollback(unittest.TestCase):
+    def setUp(self):
+        import FreeCAD
+
+        from ForgeTests import models
+
+        self.doc = FreeCAD.newDocument("ForgeRollback")
+        self.body, self.pad, self.pocket = models.block_with_hole(self.doc)
+
+    def tearDown(self):
+        import FreeCAD
+
+        FreeCAD.closeDocument(self.doc.Name)
+
+    def _volume(self):
+        shape = self.body.Shape
+        return 0.0 if shape.isNull() else shape.Volume
+
+    def test_model_is_valid(self):
+        import math
+
+        self.assertTrue(self.body.Shape.isValid())
+        self.assertAlmostEqual(self._volume(), 2000 - 20 * math.pi, places=6)
+
+    def test_positions_and_volumes(self):
+        import math
+
+        from forgelib import rollback
+
+        self.assertEqual(rollback.solid_features(self.body), [self.pad, self.pocket])
+        self.assertEqual(rollback.position(self.body), 2)
+        self.assertFalse(rollback.is_rolled_back(self.body))
+
+        self.assertEqual(rollback.step(self.body, -1), 1)
+        self.assertIs(self.body.Tip, self.pad)
+        self.assertTrue(rollback.is_rolled_back(self.body))
+        self.assertAlmostEqual(self._volume(), 2000, places=6)
+        self.assertEqual(rollback.describe(self.body), "1/2 – Pad")
+
+        self.assertEqual(rollback.set_position(self.body, 0), 0)
+        self.assertIsNone(self.body.Tip)
+        self.assertEqual(self._volume(), 0.0)
+        self.assertEqual(rollback.describe(self.body), "0/2 – inizio")
+
+        self.assertEqual(rollback.to_end(self.body), 2)
+        self.assertIs(self.body.Tip, self.pocket)
+        self.assertAlmostEqual(self._volume(), 2000 - 20 * math.pi, places=6)
+
+    def test_positions_are_clamped(self):
+        from forgelib import rollback
+
+        self.assertEqual(rollback.set_position(self.body, 99), 2)
+        self.assertEqual(rollback.set_position(self.body, -5), 0)
+        self.assertEqual(rollback.step(self.body, -1), 0)
+
+    def test_rollback_is_undoable(self):
+        from forgelib import rollback
+
+        self.doc.UndoMode = 1
+        rollback.set_position(self.body, 1)
+        self.assertIs(self.body.Tip, self.pad)
+        self.doc.undo()
+        self.assertIs(self.body.Tip, self.pocket)

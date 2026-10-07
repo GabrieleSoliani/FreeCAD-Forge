@@ -162,6 +162,42 @@ class TestForgeWorkbench(unittest.TestCase):
             manager._follow_context()
             self.assertFalse(manager.headsup.is_shown())
 
+    def test_rollback_slider_and_commands(self):
+        from ForgeTests import models
+        from forgelib import rollback
+
+        manager = FreeCADGui.getWorkbench("ForgeWorkbench")._manager
+        doc = FreeCAD.newDocument("ForgeRollbackGui")
+        try:
+            body, pad, pocket = models.block_with_hole(doc)
+            FreeCADGui.ActiveDocument.ActiveView.setActiveObject("pdbody", body)
+            FreeCADGui.updateGui()
+            manager._follow_context()
+            slider = self.mw.findChild(QtWidgets.QSlider, "ForgeRollbackSlider")
+            label = self.mw.findChild(QtWidgets.QLabel, "ForgeRollbackLabel")
+            self.assertEqual((slider.minimum(), slider.maximum(), slider.value()), (0, 2, 2))
+            self.assertTrue(manager.rollback_shown())
+
+            slider.setValue(1)  # come un rilascio del cursore
+            self.assertIs(body.Tip, pad)
+            self.assertAlmostEqual(body.Shape.Volume, 2000, places=6)
+            self.assertEqual(label.text(), "1/2 – Pad")
+
+            FreeCADGui.runCommand("Forge_RollbackPrevious")
+            self.assertEqual(rollback.position(body), 0)
+            self.assertFalse(FreeCADGui.isCommandActive("Forge_RollbackPrevious"))
+            FreeCADGui.runCommand("Forge_RollbackNext")
+            self.assertEqual(rollback.position(body), 1)
+            FreeCADGui.runCommand("Forge_RollbackToEnd")
+            self.assertIs(body.Tip, pocket)
+            manager._follow_context()
+            self.assertEqual(slider.value(), 2)
+        finally:
+            FreeCAD.closeDocument(doc.Name)
+        FreeCADGui.updateGui()
+        manager._follow_context()
+        self.assertFalse(manager.rollback_shown())
+
     def test_sketch_edit_outside_forge_unchanged(self):
         """Fuori da Forge la modifica dello schizzo passa ancora allo Sketcher (comportamento upstream)."""
         doc = FreeCAD.newDocument("ForgeSketchEditPD")

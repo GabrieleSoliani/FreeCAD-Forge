@@ -10,6 +10,7 @@ import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtWidgets
 
+from forgelib import rollback
 from forgelib.ui import catalog
 from forgelib.ui.context import Context, TabFollower
 from forgelib.ui.headsup import HeadsUpBar
@@ -84,6 +85,23 @@ class CommandManager(QtCore.QObject):
         # si ricorda solo la scheda scelta a mano, non quelle imposte dal contesto
         self._tabbar.tabBarClicked.connect(self._remember)
 
+        # rollback bar del corpo attivo (posizione 0..N, vedi forgelib.rollback)
+        self._rollback_body = None
+        self._rollback_actions = [self._toolbar.addSeparator()]
+        label = QtWidgets.QLabel(" Rollback ", self._toolbar)
+        self._slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self._toolbar)
+        self._slider.setObjectName("ForgeRollbackSlider")
+        self._slider.setFixedWidth(160)
+        self._slider.setTracking(False)  # ricalcolo solo al rilascio, non durante il trascinamento
+        self._slider.setPageStep(1)
+        self._slider.setToolTip("Trascinare per sopprimere temporaneamente le feature successive")
+        self._slider_label = QtWidgets.QLabel("", self._toolbar)
+        self._slider_label.setObjectName("ForgeRollbackLabel")
+        for widget in (label, self._slider, self._slider_label):
+            self._rollback_actions.append(self._toolbar.addWidget(widget))
+        self._slider.valueChanged.connect(self._on_slider)
+        self._show_rollback(False)
+
         self._timer = QtCore.QTimer(self)
         self._timer.setInterval(POLL_INTERVAL_MS)
         self._timer.timeout.connect(self._follow_context)
@@ -109,6 +127,7 @@ class CommandManager(QtCore.QObject):
             (self._timer.timeout, self._follow_context),
             (self._tabbar.currentChanged, self._apply),
             (self._tabbar.tabBarClicked, self._remember),
+            (self._slider.valueChanged, self._on_slider),
         ):
             try:
                 signal.disconnect(slot)
@@ -203,6 +222,7 @@ class CommandManager(QtCore.QObject):
             FreeCAD.Console.PrintLog(f"Forge: contesto non leggibile: {err}\n")
             return
         self.headsup.set_wanted(context.view3d_active)
+        self.update_rollback()
         key = None
         if _params().GetBool("AutoSwitchTabs", True):
             key = self._follower.update(context, self.current_key())
@@ -212,3 +232,43 @@ class CommandManager(QtCore.QObject):
                 self._apply(self._tabbar.currentIndex())
         if key is not None:
             self.set_current(key)
+
+    # --- rollback ----------------------------------------------------------------------
+
+    def rollback_shown(self):
+        return all(action.isVisible() for action in self._rollback_actions)
+
+    def _show_rollback(self, visible):
+        for action in self._rollback_actions:
+            action.setVisible(visible)
+
+    def update_rollback(self):
+        """Allinea il cursore al corpo attivo (chiamata dal timer di contesto)."""
+        body = rollback.active_body()
+        self._rollback_body = body
+        if body is None:
+            self._show_rollback(False)
+            return
+        count = len(rollback.solid_features(body))
+        pos = rollback.position(body)
+        self._slider.blockSignals(True)
+        try:
+            if self._slider.maximum() != count:
+                self._slider.setRange(0, count)
+            if self._slider.value() != pos and not self._slider.isSliderDown():
+                self._slider.setValue(pos)
+        finally:
+            self._slider.blockSignals(False)
+        self._slider_label.setText(rollback.describe(body))
+        self._show_rollback(True)
+
+    def _on_slider(self, value):
+        body = self._rollback_body
+        if body is None or self._closed:
+            return
+        try:
+            rollback.set_position(body, value)
+        except Exception as err:
+            FreeCAD.Console.PrintError(f"Forge: rollback non riuscito: {err}\n")
+        self.update_rollback()
+

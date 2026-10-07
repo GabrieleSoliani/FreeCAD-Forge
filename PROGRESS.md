@@ -18,7 +18,10 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         preference pack (vedi `DECISIONS.md`).
   - [x] M1.4 Barra heads-up sovrapposta alla vista 3D (adatta, zoom finestra, orientamento, stile di
         visualizzazione, sezione, nascondi/mostra, proiezione). Disattivabile con il parametro `ShowHeadsUp`.
-  - [ ] M1.5 Rollback bar nell'albero (pilotando `Body.Tip`), cartelle, riordino con controllo dipendenze.
+  - [x] M1.5 Rollback bar: cursore "Rollback" accanto alle linguette per il corpo attivo e comandi
+        indietro/avanti/fine nella scheda Feature (basati su `Body.Tip`, annullabili).
+        Limiti: le cartelle dentro un Body non sono supportate da PartDesign (non implementate); il riordino
+        resta quello di FreeCAD (`PartDesign_MoveFeature`, trascinamento nell'albero) che già controlla le dipendenze.
   - [ ] M1.6 Menu radiale contestuale / mouse gestures.
 
 ## Ambiente e comandi (Windows locale)
@@ -58,7 +61,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M1.5: rollback bar e albero delle feature.
+M1.6: menu radiale contestuale (tasto S / gesto del mouse).
 
 ## Problemi noti
 
@@ -108,4 +111,12 @@ default vero), `LastTab` (stringa).
 2. Ridimensionare la finestra: la barra resta centrata. Aprire una pagina TechDraw: la barra sparisce; tornando
    alla vista 3D ricompare. Passando a un altro workbench sparisce.
 3. Riferire se copre elementi importanti (es. il cubo di navigazione) o se i colori non si leggono col tema scuro.
+
+### M1.5 — Rollback bar
+1. Creare un corpo con almeno tre feature (es. Pad, Pocket, Fillet) e renderlo attivo.
+2. Accanto alle linguette compare "Rollback [cursore] 3/3 – Fillet". Trascinare il cursore indietro e rilasciare:
+   il modello mostra solo le feature fino alla posizione scelta; l'etichetta riporta "k/3 – <feature>".
+3. Scheda Feature: i pulsanti con le frecce (indietro, avanti, fine) spostano la posizione di una feature o fino alla fine.
+4. Ctrl+Z annulla l'ultimo spostamento del rollback.
+5. Senza corpo attivo il cursore non compare.
 
