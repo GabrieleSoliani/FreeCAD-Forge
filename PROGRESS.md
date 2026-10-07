@@ -80,7 +80,8 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
   - [x] M4.1 Configurazioni (`forgelib/features/configurations.py`, comando "Configurazioni" nella scheda Feature):
         tabella configurazioni × parametri `Oggetto.Proprietà` con soppressione (`Suppressed`), configurazione attiva,
         cattura dei valori correnti, importazione di una tabella dati da foglio di calcolo, salvataggio nel documento.
-  - [ ] M4.2 Nervatura (rib).
+  - [x] M4.2 Nervatura (`forgelib/features/rib.py`, comando "Nervatura" nella scheda Feature): profilo aperto prolungato
+        fino al materiale nel piano dello schizzo, regione chiusa estrusa simmetricamente; `Reversed` per l'altro lato.
   - [ ] M4.3 Gestore equazioni unificato.
 
 ## Ambiente e comandi (Windows locale)
@@ -245,4 +246,9 @@ default vero), `LastTab` (stringa).
 2. "Nuova configurazione" "Senza foro": nella tabella mettere `true` nella colonna Senza foro della riga Pocket.Suppressed.
 3. Scegliere la configurazione e "Attiva": il foro sparisce; tornando a Standard ricompare. Salvare, riaprire: resta attiva
    l'ultima configurazione.
+
+### M4.2 — Nervatura
+1. Staffa a L: schizzo sul piano YZ (spostato a metà lunghezza) con una linea diagonale tra base e ala.
+2. Selezionare lo schizzo → scheda Feature → Nervatura: compare un fazzoletto triangolare spesso 3 mm, centrato sul piano.
+3. Accorciare la linea in modo che non tocchi il pezzo: la nervatura si prolunga comunque fino alle facce.
 

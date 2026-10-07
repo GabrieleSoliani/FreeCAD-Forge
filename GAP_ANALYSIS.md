@@ -45,7 +45,7 @@ Legenda
 | Pattern lineare/circolare/specchio | ✅ | — | — | Più lenti di SW su molti istanze |
 | Pattern da curva, da schizzo/punti | ✅ | — | — | `PathPattern`, `PointPattern` |
 | Pattern da tabella / con varianti | ❌ | B | M | |
-| Costola (rib) | ❌ | M | M | Surrogato: Pad simmetrico di schizzo aperto non supportato → feature nuova |
+| Costola (rib) | ✅ Forge | — | — | Nervatura da profilo aperto (M4.2) |
 | Scritte in rilievo/incise su superficie | 🟡 | M | M | ShapeString + Pad (piano); manca avvolgi su superficie curva |
 | Avvolgi (wrap) / deforma / flessione | ❌ | B | L | |
 | Instant3D (trascina quote nella vista) | ❌ | M | M | Mattone: `EditableDatumLabel` |

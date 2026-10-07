@@ -184,6 +184,7 @@ TABS = (
             "PartDesign_Chamfer",
             "PartDesign_Draft",
             "PartDesign_Thickness",
+            "Forge_Rib",
             SEPARATOR,
             "PartDesign_Mirrored",
             "PartDesign_LinearPattern",

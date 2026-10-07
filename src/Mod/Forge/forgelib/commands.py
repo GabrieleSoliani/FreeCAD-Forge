@@ -75,6 +75,9 @@ def register():
     from forgelib import configurations_gui
 
     configurations_gui.register()
+    from forgelib.features import rib
+
+    rib.register()
 
 
 def offer_settings_once():

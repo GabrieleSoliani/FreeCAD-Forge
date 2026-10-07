@@ -23,6 +23,7 @@ SET(ForgeLib_SRCS
     forgelib/features/fasteners.py
     forgelib/features/component_pattern.py
     forgelib/features/configurations.py
+    forgelib/features/rib.py
     forgelib/assembly_gui.py
     forgelib/drawing.py
     forgelib/drawing_gui.py
@@ -60,6 +61,7 @@ SET(ForgeTests_SRCS
     ForgeTests/TestForgeComponents.py
     ForgeTests/TestForgeDrawing.py
     ForgeTests/TestForgeConfigurations.py
+    ForgeTests/TestForgeRib.py
 )
 
 SET(Forge_Icons
@@ -84,6 +86,7 @@ SET(Forge_Icons
     Resources/icons/Forge_MirrorComponent.svg
     Resources/icons/Forge_AutoDrawing.svg
     Resources/icons/Forge_Configurations.svg
+    Resources/icons/Forge_Rib.svg
 )
 
 SET(Forge_ALL ${Forge_SRCS} ${ForgeLib_SRCS} ${ForgeTests_SRCS} ${Forge_Icons})
