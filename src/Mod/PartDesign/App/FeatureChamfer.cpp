@@ -187,6 +187,15 @@ App::DocumentObjectExecReturn* Chamfer::execute()
                 Precision::Confusion(),
                 TopAbs_SHAPE
             );
+            // Forge: a result that is still invalid used to be accepted silently (see
+            // CORE_PATCHES.md); report it so that later features do not build on it.
+            if (!shape.isValid()) {
+                return new App::DocumentObjectExecReturn(QT_TRANSLATE_NOOP(
+                    "Exception",
+                    "Chamfer result is not a valid solid: the size is probably too large "
+                    "for the adjacent faces"
+                ));
+            }
         }
 
         // store shape before refinement

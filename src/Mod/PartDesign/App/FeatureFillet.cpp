@@ -133,6 +133,16 @@ App::DocumentObjectExecReturn* Fillet::execute()
                 Precision::Confusion(),
                 TopAbs_SHAPE
             );
+            // Forge: a result that is still invalid (e.g. a radius too large for the adjacent
+            // faces, giving a solid with negative volume) used to be accepted silently (see
+            // CORE_PATCHES.md); report it so that later features do not build on it.
+            if (!shape.isValid()) {
+                return new App::DocumentObjectExecReturn(QT_TRANSLATE_NOOP(
+                    "Exception",
+                    "Fillet result is not a valid solid: the radius is probably too large "
+                    "for the adjacent faces"
+                ));
+            }
         }
 
         // store shape before refinement

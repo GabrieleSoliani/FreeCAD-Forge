@@ -342,7 +342,16 @@ App::DocumentObjectExecReturn* Draft::execute()
         return App::DocumentObject::StdReturn;
     }
     catch (Standard_Failure& e) {
-
-        return new App::DocumentObjectExecReturn(e.GetMessageString());
+        // Forge: OCC often throws without a message here, which left the feature in error with
+        // an empty explanation (see CORE_PATCHES.md).
+        const char* msg = e.GetMessageString();
+        if (!msg || !*msg) {
+            return new App::DocumentObjectExecReturn(QT_TRANSLATE_NOOP(
+                "Exception",
+                "Draft failed: the angle is probably too large for the selected faces, or the "
+                "neutral plane is not suitable"
+            ));
+        }
+        return new App::DocumentObjectExecReturn(msg);
     }
 }

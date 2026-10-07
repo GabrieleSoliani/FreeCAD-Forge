@@ -3,4 +3,4 @@
 
 import FreeCAD
 
-FreeCAD.__unit_test__ += ["ForgeTests.TestForgeApp"]
+FreeCAD.__unit_test__ += ["ForgeTests.TestForgeApp", "ForgeTests.TestForgeRobustness"]

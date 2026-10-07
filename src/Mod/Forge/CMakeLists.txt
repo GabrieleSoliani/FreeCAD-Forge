@@ -24,6 +24,7 @@ SET(ForgeTests_SRCS
     ForgeTests/TestForgeApp.py
     ForgeTests/TestForgeGui.py
     ForgeTests/models.py
+    ForgeTests/TestForgeRobustness.py
 )
 
 SET(Forge_Icons

@@ -27,7 +27,10 @@
 #include <string>
 #include <vector>
 
+#include <algorithm>
+#include <BRepGProp.hxx>
 #include <BRepOffset_Mode.hxx>
+#include <GProp_GProps.hxx>
 #include <Precision.hxx>
 #include <TopoDS.hxx>
 
@@ -243,6 +246,29 @@ App::DocumentObjectExecReturn* Thickness::execute()
                         mode,
                         joinType
                     );
+                    // Forge: with a wall too thick for the part OCC returned either an invalid
+                    // solid or the unchanged input, both accepted silently (see CORE_PATCHES.md).
+                    if (!faces->empty()) {
+                        if (res.isNull() || !res.isValid()) {
+                            return new App::DocumentObjectExecReturn(QT_TRANSLATE_NOOP(
+                                "Exception",
+                                "Thickness result is not a valid solid: the wall is probably "
+                                "too thick for the part"
+                            ));
+                        }
+                        GProp_GProps before;
+                        GProp_GProps after;
+                        BRepGProp::VolumeProperties(solid.getShape(), before);
+                        BRepGProp::VolumeProperties(res.getShape(), after);
+                        if (std::fabs(after.Mass() - before.Mass())
+                            <= 1e-9 * std::max(1.0, std::fabs(before.Mass()))) {
+                            return new App::DocumentObjectExecReturn(QT_TRANSLATE_NOOP(
+                                "Exception",
+                                "Thickness had no effect: the wall is probably too thick for "
+                                "the part"
+                            ));
+                        }
+                    }
                 }
                 shapes.push_back(res);
             }
