@@ -60,6 +60,9 @@ def register():
     from forgelib.features import sketch3d
 
     sketch3d.register()
+    from forgelib import sheetmetal_gui
+
+    sheetmetal_gui.register()
 
 
 def offer_settings_once():

@@ -77,8 +77,8 @@ Legenda
 
 | Funzione | FreeCAD | Gravità | Sforzo | Note |
 |---|---|---|---|---|
-| Flangia base, flangia su bordo, piega, scarico, sviluppo, DXF | 🧩 | **A** | L | Assente nel core; addon "SheetMetal" (GPL) maturo → integrare in Forge (M5) |
-| Tabella di piega / fattore K | 🧩 | M | M | Presente nell'addon |
+| Flangia base, flangia su bordo, piega, scarico, sviluppo, DXF | ✅ Forge | — | — | Addon SheetMetal (LGPL) integrato in `src/Mod/SheetMetal` + scheda Lamiera (M5.1) |
+| Tabella di piega / fattore K | ✅ Forge | — | — | Comando "Tabella di piega" (M5.1) |
 | Flangia a raccordo (miter), formatura, angolo chiuso | 🧩/❌ | M | L | |
 
 ## 6. Saldature / profilati

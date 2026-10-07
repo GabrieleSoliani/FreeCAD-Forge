@@ -129,3 +129,39 @@ class TestSketchBlocksGui(unittest.TestCase):
         finally:
             FreeCADGui.Selection.clearSelection()
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestSheetMetalGui(unittest.TestCase):
+    def test_bend_table_sheet(self):
+        try:
+            import SheetMetalCmd  # noqa: F401
+        except ImportError:
+            self.skipTest("SheetMetal non compilato")
+        from ForgeTests import models
+        from forgelib import sheetmetal, sheetmetal_gui
+
+        doc = FreeCAD.newDocument("ForgeSheetMetalGui")
+        try:
+            profile = doc.addObject("Sketcher::SketchObject", "Profilo")
+            models.add_rectangle(profile, 0, 0, 100, 50)
+            doc.recompute()
+            base = sheetmetal.base_flange(doc, profile, 2, 1)
+            doc.recompute()
+            edge = [f"Edge{i + 1}" for i, e in enumerate(base.Shape.Edges)
+                    if abs(e.CenterOfMass.y) < 1e-6 and abs(e.CenterOfMass.z - 2) < 1e-6]
+            wall = sheetmetal.edge_flange(doc, base, edge, 20, 1)
+            doc.recompute()
+            top = [f"Face{i + 1}" for i, f in enumerate(wall.Shape.Faces)
+                   if abs(f.CenterOfMass.z - 2) < 1e-6 and abs(f.CenterOfMass.y - 25) < 1]
+            flat = sheetmetal.unfold(doc, wall, top[0])
+            doc.recompute()
+            FreeCADGui.Selection.clearSelection()
+            FreeCADGui.Selection.addSelection(flat)
+            self.assertIs(sheetmetal_gui.selected_unfold(), flat)
+            self.assertTrue(FreeCADGui.isCommandActive("Forge_BendTable"))
+            sheet, rows = sheetmetal_gui.make_bend_table_sheet(flat)
+            self.assertEqual(sheet.get("A1"), "Feature")
+            self.assertAlmostEqual(float(sheet.get("F2")), rows[0].allowance, places=3)
+        finally:
+            FreeCADGui.Selection.clearSelection()
+            FreeCAD.closeDocument(doc.Name)

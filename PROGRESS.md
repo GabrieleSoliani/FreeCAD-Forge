@@ -50,6 +50,12 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         o spline 3D da punti/vertici selezionati, aperta o chiusa, raccordi agli spigoli; usabile come percorso di sweep.
         Limite: nessun vincolo 3D tra entità (si modificano i punti nelle proprietà, anche con espressioni).
 
+- **M5 — Lamiera e saldature: in corso.**
+  - [x] M5.1 Lamiera: addon SheetMetal (LGPL) integrato in `src/Mod/SheetMetal` (vedi `THIRD_PARTY.md`); scheda Forge
+        "Lamiera" con tutti i suoi comandi; `forgelib/sheetmetal.py` con tabella di piega (tolleranza/deduzione, fattore K
+        dello sviluppo) ed esportazione DXF dello sviluppo; comandi "Tabella di piega" ed "Esporta sviluppo DXF".
+  - [ ] M5.2 Profilati strutturali con libreria UNI/EN, rifilatura, distinta di taglio.
+
 ## Ambiente e comandi (Windows locale)
 
 Toolchain: pixi 0.81 + MSVC 14.44 (Build Tools 2022), Ninja, ccache, Qt 6.11, Python 3.13, OCCT 8.0.
@@ -87,7 +93,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M5 — Lamiera (integrazione dell'addon SheetMetal, GPL) e profilati strutturali.
+M5.2 profilati strutturali (saldature).
 
 ## Problemi noti
 
@@ -182,4 +188,10 @@ default vero), `LastTab` (stringa).
 1. Scheda Schizzo → Schizzo 3D senza selezione: compare un percorso 3D di esempio (3 punti). Nelle proprietà modificare
    Points, Mode (Polilinea/Spline), Closed, BendRadius e verificare l'aggiornamento.
 2. Selezionare 3–4 vertici di un solido in ordine e rieseguire il comando: la polilinea li collega nell'ordine scelto.
+
+### M5.1 — Lamiera
+1. Scheda Lamiera: schizzo rettangolo → "Flangia base" (SheetMetal_AddBase) con spessore 2; selezionare uno spigolo → "Flangia"
+   (AddWall); selezionare la faccia grande → "Sviluppa" (Unfold).
+2. Selezionare lo sviluppo → "Tabella di piega": compare un foglio di calcolo con angolo, raggio, K, tolleranza, deduzione.
+3. Selezionare lo sviluppo → "Esporta sviluppo DXF": aprire il file in un visualizzatore DXF (contorno + linee di piega).
 

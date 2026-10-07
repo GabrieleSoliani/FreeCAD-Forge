@@ -41,7 +41,12 @@ class TestForgeWorkbench(unittest.TestCase):
         """Un nome di comando sbagliato nel catalogo deve far fallire il test."""
         import importlib.util
 
-        requirements = {"surfaces": "SurfaceGui", "assembly": "AssemblyGui", "drawing": "TechDrawGui"}
+        requirements = {
+            "surfaces": "SurfaceGui",
+            "assembly": "AssemblyGui",
+            "drawing": "TechDrawGui",
+            "sheetmetal": "SheetMetalCmd",
+        }
         available = set(FreeCADGui.listCommands())
         for key, module in requirements.items():
             with self.subTest(tab=key):

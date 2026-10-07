@@ -46,6 +46,10 @@ if(BUILD_FORGE)
   add_subdirectory(Forge)
 endif(BUILD_FORGE)
 
+if(BUILD_SHEETMETAL)
+  add_subdirectory(SheetMetal)
+endif(BUILD_SHEETMETAL)
+
 if(BUILD_MESH)
   add_subdirectory(Mesh)
 endif(BUILD_MESH)
