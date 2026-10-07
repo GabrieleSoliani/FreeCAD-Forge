@@ -57,6 +57,7 @@ class CommandManager(QtCore.QObject):
         self._tabs = list(tabs)
         self._follower = TabFollower()
         self._laid_out = False
+        self._editing = False  # uno schizzo è in modifica
 
         mw = FreeCADGui.getMainWindow()
         self._toolbar = QtWidgets.QToolBar("Forge Command Manager", mw)
@@ -112,8 +113,14 @@ class CommandManager(QtCore.QObject):
         self._timer.stop()
         self._toolbar.hide()
 
-    def tab_toolbar(self, tab):
-        return FreeCADGui.getMainWindow().findChild(QtWidgets.QToolBar, tab.toolbar_name)
+    def toolbar(self, name):
+        return FreeCADGui.getMainWindow().findChild(QtWidgets.QToolBar, name)
+
+    def visible_toolbars(self, tab):
+        """Nomi delle toolbar da mostrare per la scheda nello stato attuale."""
+        if self._editing and tab.edit_groups:
+            return tab.edit_toolbar_names()
+        return [tab.toolbar_name]
 
     # --- interni -----------------------------------------------------------------------
 
@@ -127,9 +134,10 @@ class CommandManager(QtCore.QObject):
         mw.addToolBar(area, self._toolbar)
         mw.addToolBarBreak(area)
         for tab in self._tabs:
-            toolbar = self.tab_toolbar(tab)
-            if toolbar is not None:
-                mw.addToolBar(area, toolbar)
+            for name, _ in tab.all_toolbars():
+                toolbar = self.toolbar(name)
+                if toolbar is not None:
+                    mw.addToolBar(area, toolbar)
         self._laid_out = True
 
     def _remember(self, index):
@@ -137,19 +145,27 @@ class CommandManager(QtCore.QObject):
             _params().SetString("LastTab", self._tabs[index].key)
 
     def _apply(self, index):
-        for i, tab in enumerate(self._tabs):
-            toolbar = self.tab_toolbar(tab)
-            if toolbar is not None:
-                toolbar.setVisible(i == index)
+        shown = set()
+        if 0 <= index < len(self._tabs):
+            shown = set(self.visible_toolbars(self._tabs[index]))
+        for tab in self._tabs:
+            for name, _ in tab.all_toolbars():
+                toolbar = self.toolbar(name)
+                if toolbar is not None:
+                    toolbar.setVisible(name in shown)
 
     def _follow_context(self):
-        if not _params().GetBool("AutoSwitchTabs", True):
-            return
         try:
             context = current_context()
         except Exception as err:  # la GUI può essere in uno stato transitorio
             FreeCAD.Console.PrintLog(f"Forge: contesto non leggibile: {err}\n")
             return
-        key = self._follower.update(context, self.current_key())
+        key = None
+        if _params().GetBool("AutoSwitchTabs", True):
+            key = self._follower.update(context, self.current_key())
+        if context.sketch_in_edit != self._editing:
+            self._editing = context.sketch_in_edit
+            if key is None:
+                self._apply(self._tabbar.currentIndex())
         if key is not None:
             self.set_current(key)

@@ -46,11 +46,24 @@ class Tab:
     key: str  # identificatore stabile, usato nei parametri e nei test
     label: str  # testo mostrato sulla linguetta
     commands: tuple  # nomi dei comandi FreeCAD, con SEPARATOR tra i gruppi
+    # Toolbar mostrate al posto di ``commands`` mentre uno schizzo è in modifica:
+    # tuple di coppie (etichetta, comandi). Vuota per le schede senza modalità di modifica.
+    edit_groups: tuple = ()
 
     @property
     def toolbar_name(self):
         """Nome della toolbar FreeCAD che contiene i comandi della scheda."""
         return "Forge " + self.label
+
+    def edit_toolbar_names(self):
+        """Nomi delle toolbar della modalità di modifica, nell'ordine di ``edit_groups``."""
+        return [f"Forge {self.label} - {label}" for label, _ in self.edit_groups]
+
+    def all_toolbars(self):
+        """Coppie (nome toolbar, comandi) di tutte le toolbar della scheda."""
+        pairs = [(self.toolbar_name, self.commands)]
+        pairs += list(zip(self.edit_toolbar_names(), (c for _, c in self.edit_groups)))
+        return pairs
 
 
 TABS = (
@@ -67,6 +80,60 @@ TABS = (
             "Sketcher_MergeSketches",
             SEPARATOR,
             "Sketcher_ValidateSketch",
+        ),
+        edit_groups=(
+            (
+                "Disegno",
+                (
+                    "Sketcher_LeaveSketch",
+                    "Sketcher_ViewSketch",
+                    "Sketcher_ViewSection",
+                    SEPARATOR,
+                    "Sketcher_CreatePoint",
+                    "Sketcher_CompLine",
+                    "Sketcher_CompCreateArc",
+                    "Sketcher_CompCreateConic",
+                    "Sketcher_CompCreateRectangles",
+                    "Sketcher_CompCreateRegularPolygon",
+                    "Sketcher_CompSlot",
+                    "Sketcher_CompCreateBSpline",
+                    "Sketcher_CreateText",
+                    SEPARATOR,
+                    "Sketcher_ToggleConstruction",
+                    SEPARATOR,
+                    "Sketcher_CompCreateFillets",
+                    "Sketcher_CompCurveEdition",
+                    "Sketcher_CompExternal",
+                    "Sketcher_CarbonCopy",
+                    SEPARATOR,
+                    "Sketcher_Translate",
+                    "Sketcher_Rotate",
+                    "Sketcher_Scale",
+                    "Sketcher_Offset",
+                    "Sketcher_Symmetry",
+                ),
+            ),
+            (
+                "Vincoli",
+                (
+                    "Sketcher_CompDimensionTools",
+                    SEPARATOR,
+                    "Sketcher_ConstrainCoincidentUnified",
+                    "Sketcher_CompHorVer",
+                    "Sketcher_ConstrainParallel",
+                    "Sketcher_ConstrainPerpendicular",
+                    "Sketcher_ConstrainTangent",
+                    "Sketcher_ConstrainEqual",
+                    "Sketcher_ConstrainSymmetric",
+                    "Sketcher_ConstrainBlock",
+                    SEPARATOR,
+                    "Sketcher_CompToggleConstraints",
+                    SEPARATOR,
+                    "Sketcher_SelectElementsWithDoFs",
+                    "Sketcher_SelectConflictingConstraints",
+                    "Sketcher_SelectRedundantConstraints",
+                ),
+            ),
         ),
     ),
     Tab(

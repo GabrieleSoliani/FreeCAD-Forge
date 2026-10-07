@@ -12,3 +12,5 @@
 | 2026-10-07 | Contesto letto con un QTimer a 300 ms mentre Forge è attivo | Non esiste un segnale Python unico per cambio vista MDI / modifica / oggetto attivo; costo trascurabile |
 | 2026-10-07 | Pacchetto Python `forgelib` (non `forge`) | Evita ambiguità con la cartella `Mod/Forge` su file system case-insensitive |
 | 2026-10-07 | M1.1 non cambia il passaggio allo Sketcher durante la modifica di uno schizzo | Richiede una patch al core: rimandata a M1.2 come task separato |
+| 2026-10-07 | Modifica dello schizzo in Forge: patch al core basata su un attributo generico del workbench (`HandlesSketchEditing`) invece di un nome cablato | Patch di una riga, neutra per gli altri workbench, riutilizzabile da altri ambienti |
+| 2026-10-07 | In modifica schizzo la scheda Schizzo mostra due toolbar Forge proprie ("Disegno", "Vincoli") invece di riusare i nomi delle toolbar dello Sketcher | Le toolbar dello Sketcher hanno visibilità "Unavailable" non impostabile da un workbench Python; con nomi propri la visibilità resta tutta sotto il controllo del command manager |

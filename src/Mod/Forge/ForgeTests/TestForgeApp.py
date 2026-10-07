@@ -24,14 +24,30 @@ class TestCatalog(unittest.TestCase):
 
     def test_tabs_well_formed(self):
         for tab in catalog.TABS:
-            with self.subTest(tab=tab.key):
-                commands = [c for c in tab.commands if c != catalog.SEPARATOR]
-                self.assertTrue(commands)
-                self.assertEqual(len(commands), len(set(commands)), "comandi duplicati")
-                self.assertNotEqual(tab.commands[0], catalog.SEPARATOR)
-                self.assertNotEqual(tab.commands[-1], catalog.SEPARATOR)
-                for a, b in zip(tab.commands, tab.commands[1:]):
-                    self.assertFalse(a == b == catalog.SEPARATOR, "separatori doppi")
+            for name, group in tab.all_toolbars():
+                with self.subTest(toolbar=name):
+                    commands = [c for c in group if c != catalog.SEPARATOR]
+                    self.assertTrue(commands)
+                    self.assertEqual(len(commands), len(set(commands)), "comandi duplicati")
+                    self.assertNotEqual(group[0], catalog.SEPARATOR)
+                    self.assertNotEqual(group[-1], catalog.SEPARATOR)
+                    for a, b in zip(group, group[1:]):
+                        self.assertFalse(a == b == catalog.SEPARATOR, "separatori doppi")
+
+    def test_all_toolbar_names_unique(self):
+        names = [name for tab in catalog.TABS for name, _ in tab.all_toolbars()]
+        self.assertEqual(len(names), len(set(names)))
+
+    def test_sketch_tab_has_edit_toolbars(self):
+        tab = catalog.tab_by_key("sketch")
+        self.assertEqual(tab.edit_toolbar_names(), ["Forge Schizzo - Disegno", "Forge Schizzo - Vincoli"])
+        edit_commands = {c for _, group in tab.edit_groups for c in group}
+        # uscita dallo schizzo e quota intelligente devono essere sempre a portata di mano
+        self.assertIn("Sketcher_LeaveSketch", edit_commands)
+        self.assertIn("Sketcher_CompDimensionTools", edit_commands)
+        for other in catalog.TABS:
+            if other.key != "sketch":
+                self.assertEqual(other.edit_groups, ())
 
     def test_resolve_commands(self):
         sep = catalog.SEPARATOR

@@ -31,9 +31,9 @@ class TestForgeWorkbench(unittest.TestCase):
         """Le schede che dipendono solo da moduli obbligatori devono essere complete."""
         available = set(FreeCADGui.listCommands())
         for key in ("sketch", "features", "evaluate"):
-            tab = catalog.tab_by_key(key)
-            _, missing = catalog.resolve_commands(tab.commands, available)
-            self.assertEqual(missing, [], f"scheda {key}")
+            for name, commands in catalog.tab_by_key(key).all_toolbars():
+                _, missing = catalog.resolve_commands(commands, available)
+                self.assertEqual(missing, [], name)
 
     def test_optional_tabs_resolved_when_module_built(self):
         """Un nome di comando sbagliato nel catalogo deve far fallire il test."""
@@ -74,6 +74,60 @@ class TestForgeWorkbench(unittest.TestCase):
         self.assertFalse(toolbar.isVisible())
         for tab in catalog.TABS:
             self.assertFalse(self.mw.findChild(QtWidgets.QToolBar, tab.toolbar_name).isVisible())
+
+    def _visible_forge_toolbars(self):
+        return [
+            name
+            for tab in catalog.TABS
+            for name, _ in tab.all_toolbars()
+            if self.mw.findChild(QtWidgets.QToolBar, name).isVisible()
+        ]
+
+    def _make_sketch(self, doc):
+        body = doc.addObject("PartDesign::Body", "Body")
+        sketch = body.newObject("Sketcher::SketchObject", "Sketch")
+        doc.recompute()
+        return sketch
+
+    def test_sketch_edit_stays_in_forge(self):
+        """Modificare uno schizzo da Forge non cambia workbench e mostra le toolbar di modifica."""
+        manager = FreeCADGui.getWorkbench("ForgeWorkbench")._manager
+        doc = FreeCAD.newDocument("ForgeSketchEdit")
+        try:
+            sketch = self._make_sketch(doc)
+            manager.set_current("evaluate")
+            FreeCADGui.ActiveDocument.setEdit(sketch.Name)
+            FreeCADGui.updateGui()
+            manager._follow_context()
+            self.assertEqual(FreeCADGui.activeWorkbench().name(), "ForgeWorkbench")
+            self.assertEqual(manager.current_key(), "sketch")
+            self.assertEqual(
+                sorted(self._visible_forge_toolbars()),
+                sorted(catalog.tab_by_key("sketch").edit_toolbar_names()),
+            )
+            FreeCADGui.ActiveDocument.resetEdit()
+            FreeCADGui.updateGui()
+            manager._follow_context()
+            self.assertEqual(FreeCADGui.activeWorkbench().name(), "ForgeWorkbench")
+            self.assertEqual(manager.current_key(), "evaluate")
+            self.assertEqual(self._visible_forge_toolbars(), ["Forge Valuta"])
+        finally:
+            FreeCAD.closeDocument(doc.Name)
+
+    def test_sketch_edit_outside_forge_unchanged(self):
+        """Fuori da Forge la modifica dello schizzo passa ancora allo Sketcher (comportamento upstream)."""
+        doc = FreeCAD.newDocument("ForgeSketchEditPD")
+        try:
+            sketch = self._make_sketch(doc)
+            FreeCADGui.activateWorkbench("PartDesignWorkbench")
+            FreeCADGui.ActiveDocument.setEdit(sketch.Name)
+            FreeCADGui.updateGui()
+            self.assertEqual(FreeCADGui.activeWorkbench().name(), "SketcherWorkbench")
+            FreeCADGui.ActiveDocument.resetEdit()
+            FreeCADGui.updateGui()
+            self.assertEqual(FreeCADGui.activeWorkbench().name(), "PartDesignWorkbench")
+        finally:
+            FreeCAD.closeDocument(doc.Name)
 
     def test_new_document_and_body_from_features_tab(self):
         """Il comando della scheda Feature funziona dentro Forge senza cambiare workbench."""

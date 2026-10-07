@@ -5,6 +5,10 @@
 class ForgeWorkbench(Workbench):
     """Ambiente unico per parti, assiemi e tavole, con command manager a schede."""
 
+    # Letto da ViewProviderSketch (patch al core, vedi CORE_PATCHES.md): la modifica di uno
+    # schizzo resta in Forge invece di passare al workbench Sketcher.
+    HandlesSketchEditing = True
+
     def __init__(self):
         import os
         import forgelib
@@ -44,13 +48,16 @@ class ForgeWorkbench(Workbench):
 
         available = set(FreeCADGui.listCommands())
         for tab in catalog.TABS:
-            commands, missing = catalog.resolve_commands(tab.commands, available)
-            if missing:
-                FreeCAD.Console.PrintLog(
-                    f"Forge: scheda {tab.label}, comandi assenti: {', '.join(missing)}\n"
-                )
+            for toolbar, wanted in tab.all_toolbars():
+                commands, missing = catalog.resolve_commands(wanted, available)
+                if missing:
+                    FreeCAD.Console.PrintLog(
+                        f"Forge: toolbar {toolbar}, comandi assenti: {', '.join(missing)}\n"
+                    )
+                if commands:
+                    self.appendToolbar(toolbar, commands)
+            commands, _ = catalog.resolve_commands(tab.commands, available)
             if commands:
-                self.appendToolbar(tab.toolbar_name, commands)
                 self.appendMenu(["&Forge", tab.label], commands)
 
     def Activated(self):

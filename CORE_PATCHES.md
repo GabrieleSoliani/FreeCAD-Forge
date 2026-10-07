@@ -9,3 +9,4 @@ Ogni patch al core è elencata qui con il motivo, per facilitare i merge da upst
 | `cMake/FreeCAD_Helpers/PrintFinalReport.cmake` | `value(BUILD_FORGE)` | Riepilogo di configurazione |
 | `src/Mod/CMakeLists.txt` | `add_subdirectory(Forge)` se `BUILD_FORGE` | Inclusione del modulo nella build |
 | `.gitignore` | log di build locali | Evita di committare `configure.log`/`build.log` |
+| `src/Mod/Sketcher/Gui/ViewProviderSketch.cpp` (script di "visibility automation" in `setEdit`) | Non chiama `tv.activateWorkbench(EditingWorkbench)` se il workbench attivo ha l'attributo `HandlesSketchEditing = True` | M1.2: modificare uno schizzo restando nell'ambiente Forge. Senza l'attributo il comportamento è identico a upstream (verificato da `TestForgeGui.test_sketch_edit_outside_forge_unchanged`) |

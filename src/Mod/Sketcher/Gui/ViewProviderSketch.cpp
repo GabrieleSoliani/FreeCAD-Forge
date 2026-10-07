@@ -4257,7 +4257,10 @@ bool ViewProviderSketch::setEdit(int ModNum)
                     "ActiveSketch = App.getDocument('%1').getObject('%2')\n"
                     "tv = Show.TempoVis(App.ActiveDocument, tag= ActiveSketch.ViewObject.TypeId)\n"
                     "ActiveSketch.ViewObject.TempoVis = tv\n"
-                    "if ActiveSketch.ViewObject.EditingWorkbench:\n"
+                    // Forge: a workbench declaring HandlesSketchEditing keeps sketch editing
+                    // in place instead of switching to EditingWorkbench (see CORE_PATCHES.md).
+                    "if ActiveSketch.ViewObject.EditingWorkbench and not getattr("
+                    "__import__('FreeCADGui').activeWorkbench(), 'HandlesSketchEditing', False):\n"
                     "  tv.activateWorkbench(ActiveSketch.ViewObject.EditingWorkbench)\n"
                     "if ActiveSketch.ViewObject.HideDependent:\n"
                     "  tv.hide(tv.get_all_dependent(%3, '%4'))\n"
