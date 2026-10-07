@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- Icona originale di FreeCAD Forge: incudine stilizzata con scintilla. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <path d="M8 22h40c0 7-5 11-12 12v6h6v6H18v-6h6v-6c-9-1-16-5-16-12z"
+        fill="#5b6b7a" stroke="#1f2a33" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M48 22h8c-1 4-4 6-8 6z" fill="#5b6b7a" stroke="#1f2a33" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="14" y="46" width="32" height="8" rx="1" fill="#3d4954" stroke="#1f2a33" stroke-width="2"/>
+  <path d="M40 4l3 7 7-3-4 7 7 3-8 1 1 7-5-5-4 6 1-8-7-1 7-4z" fill="#f2a516" stroke="#a15c00" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>

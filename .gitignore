@@ -77,6 +77,6 @@ tsupdate_stdout.log
 
 # Forge: log di build locali
 /configure.log
-/build.log
+/build*.log
 /install.log
 /test*.log
