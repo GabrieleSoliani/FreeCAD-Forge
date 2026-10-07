@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- Icona originale di FreeCAD Forge (aggiungi alla libreria). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect x="6" y="10" width="10" height="46" fill="#9fb3c8" stroke="#1f2a33" stroke-width="2"/>
+  <rect x="18" y="10" width="10" height="46" fill="#2b6cb0" stroke="#1f2a33" stroke-width="2"/>
+  <rect x="30" y="16" width="10" height="40" fill="#9fb3c8" stroke="#1f2a33" stroke-width="2"/>
+  <path d="M50 30v24M38 42h24" stroke="#33b340" stroke-width="6" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- Icona originale di FreeCAD Forge (analisi di spessore). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <path d="M4 44h56v12H4z" fill="#33b340" stroke="#1f2a33" stroke-width="2"/>
+  <path d="M28 8h6v36h-6z" fill="#d62828" stroke="#1f2a33" stroke-width="2"/>
+  <path d="M44 16v20M40 20l4-4 4 4M40 32l4 4 4-4" fill="none" stroke="#2b6cb0" stroke-width="3"/>
+</svg>

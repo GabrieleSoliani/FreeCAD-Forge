@@ -8,7 +8,13 @@ from PySide import QtCore, QtWidgets
 from forgelib import settings
 
 SETTINGS_COMMANDS = ["Forge_ApplySolidWorksSettings", "Forge_RevertSettings"]
-MENU_COMMANDS = ["Forge_RadialMenu", "Forge_Diagnostics"]
+MENU_COMMANDS = [
+    "Forge_RadialMenu",
+    "Forge_Diagnostics",
+    "Forge_PackAndGo",
+    "Forge_LibraryAdd",
+    "Forge_LibraryInsert",
+]
 
 
 class _ApplySettings:
@@ -81,6 +87,9 @@ def register():
     from forgelib import equations_gui
 
     equations_gui.register()
+    from forgelib import productivity_gui
+
+    productivity_gui.register()
 
 
 def offer_settings_once():

@@ -223,3 +223,137 @@ EVALUATE_COMMANDS = ["Forge_Interference", "Forge_DraftAnalysis"]
 def register():
     FreeCADGui.addCommand("Forge_Interference", _InterferenceCommand())
     FreeCADGui.addCommand("Forge_DraftAnalysis", _DraftAnalysisCommand())
+    FreeCADGui.addCommand("Forge_ThicknessAnalysis", _ThicknessCommand())
+    FreeCADGui.addCommand("Forge_Compare", _CompareCommand())
+
+
+# --- analisi di spessore e confronto (M8) -------------------------------------------------------
+
+THICKNESS_OBJECT = "AnalisiSpessore"
+COMPARE_GROUP = "Confronto"
+
+
+def run_thickness_analysis(obj, minimum=None):
+    """Copia colorata: rosso le facce più sottili di ``minimum``, verde le altre."""
+    if minimum is None:
+        minimum = _params().GetFloat("MinThickness", 1.0)
+    doc = obj.Document
+    shape = evaluate.global_shape(obj)
+    faces = evaluate.thickness_analysis(shape, minimum)
+    doc.openTransaction("Analisi di spessore")
+    try:
+        result = doc.addObject("Part::Feature", THICKNESS_OBJECT)
+        result.Label = f"Analisi spessore {obj.Label} (min {minimum:g} mm)"
+        result.Shape = shape
+        result.addProperty("App::PropertyLink", "AnalysedObject", "Forge", "Oggetto analizzato")
+        result.AnalysedObject = obj
+        doc.recompute()
+        if result.ViewObject is not None:
+            colors = [(0.6, 0.6, 0.6)] * len(shape.Faces)
+            for face in faces:
+                colors[face.index - 1] = evaluate.THICKNESS_COLORS[face.kind]
+            result.ViewObject.DiffuseColor = colors
+            obj.Visibility = False
+    finally:
+        doc.commitTransaction()
+    return result, faces
+
+
+def clear_thickness_analysis(doc):
+    removed = 0
+    for obj in list(doc.Objects):
+        if obj.Name.startswith(THICKNESS_OBJECT):
+            target = getattr(obj, "AnalysedObject", None)
+            if target is not None:
+                target.Visibility = True
+            doc.removeObject(obj.Name)
+            removed += 1
+    return removed
+
+
+def run_compare(old_obj, new_obj):
+    """Gruppo "Confronto" con il materiale aggiunto (verde) e tolto (rosso) dalla nuova versione."""
+    doc = new_obj.Document
+    result = evaluate.compare_shapes(evaluate.global_shape(old_obj), evaluate.global_shape(new_obj))
+    doc.openTransaction("Confronta versioni")
+    try:
+        old_group = doc.getObject(COMPARE_GROUP)
+        if old_group is not None:
+            old_group.removeObjectsFromDocument()
+            doc.removeObject(old_group.Name)
+        group = doc.addObject("App::DocumentObjectGroup", COMPARE_GROUP)
+        for name, shape, volume, color in (
+            ("Aggiunto", result.added, result.added_volume, (0.2, 0.75, 0.25)),
+            ("Tolto", result.removed, result.removed_volume, (0.85, 0.2, 0.2)),
+        ):
+            if volume > 1e-6:
+                part = doc.addObject("Part::Feature", name)
+                part.Shape = shape
+                part.Label = f"{name} ({volume:.1f} mm³)"
+                group.addObject(part)
+                if part.ViewObject is not None:
+                    part.ViewObject.ShapeColor = color
+        doc.recompute()
+    finally:
+        doc.commitTransaction()
+    return result
+
+
+class _ThicknessCommand:
+    def GetResources(self):
+        return {
+            "Pixmap": icon_path("Forge_ThicknessAnalysis"),
+            "MenuText": "Analisi di spessore",
+            "ToolTip": "Colora in rosso le facce dove lo spessore è sotto il minimo (parametro "
+            "MinThickness, mm). Rieseguire per togliere l'analisi.",
+        }
+
+    def IsActive(self):
+        return FreeCAD.ActiveDocument is not None
+
+    def Activated(self):
+        doc = FreeCAD.ActiveDocument
+        if clear_thickness_analysis(doc):
+            doc.recompute()
+            return
+        selection = FreeCADGui.Selection.getSelection()
+        if not selection:
+            QtWidgets.QMessageBox.information(
+                FreeCADGui.getMainWindow(), "Analisi di spessore", "Seleziona un corpo o un solido.")
+            return
+        minimum = _params().GetFloat("MinThickness", 1.0)
+        value, ok = QtWidgets.QInputDialog.getDouble(
+            FreeCADGui.getMainWindow(), "Analisi di spessore", "Spessore minimo (mm):",
+            minimum, 0.01, 1e6, 2)
+        if not ok:
+            return
+        _params().SetFloat("MinThickness", value)
+        _, faces = run_thickness_analysis(selection[0], value)
+        thin = [f for f in faces if f.kind == evaluate.THIN]
+        detail = f" (minimo {min(f.minimum for f in thin):.3f} mm)" if thin else ""
+        FreeCAD.Console.PrintMessage(f"Forge: facce sotto {value:g} mm: {len(thin)}{detail}\n")
+
+
+class _CompareCommand:
+    def GetResources(self):
+        return {
+            "Pixmap": icon_path("Forge_Compare"),
+            "MenuText": "Confronta versioni",
+            "ToolTip": "Seleziona la versione vecchia e poi la nuova: mostra in verde il materiale "
+            "aggiunto e in rosso quello tolto, con i volumi",
+        }
+
+    def IsActive(self):
+        return len(FreeCADGui.Selection.getSelection()) == 2
+
+    def Activated(self):
+        old_obj, new_obj = FreeCADGui.Selection.getSelection()
+        result = run_compare(old_obj, new_obj)
+        if result.identical:
+            text = "Le due versioni sono identiche."
+        else:
+            text = f"Aggiunto {result.added_volume:.2f} mm³, tolto {result.removed_volume:.2f} mm³."
+        QtWidgets.QMessageBox.information(FreeCADGui.getMainWindow(), "Confronta versioni", text)
+
+
+EVALUATE_COMMANDS += ["Forge_ThicknessAnalysis", "Forge_Compare"]

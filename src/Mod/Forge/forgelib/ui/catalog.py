@@ -280,6 +280,8 @@ TABS = (
             SEPARATOR,
             "Forge_Interference",
             "Forge_DraftAnalysis",
+            "Forge_ThicknessAnalysis",
+            "Forge_Compare",
             SEPARATOR,
             "Part_SectionCut",
             "Std_ToggleClipPlane",

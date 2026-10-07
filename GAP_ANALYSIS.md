@@ -133,19 +133,19 @@ Legenda
 |---|---|---|---|---|
 | Misura (distanza, angolo, area, raggio) | ✅ | — | — | Measure workbench |
 | Proprietà di massa con materiale | ✅ | — | — | `MassPropertiesObject` |
-| Interferenze (parte/assieme) | ❌ | **A** | S | vedi Assiemi |
-| Analisi di sformo | ❌ | M | M | Colorazione facce per angolo rispetto a direzione |
-| Analisi di spessore | ❌ | B | M | |
+| Interferenze (parte/assieme) | ✅ Forge | — | — | M8 |
+| Analisi di sformo | ✅ Forge | — | — | M8 |
+| Analisi di spessore | ✅ Forge | — | — | M8 |
 | Sezione dinamica | ✅ | — | — | `SectionCutting`, clipping plane |
 | Verifica geometria | ✅ | — | — | `Part_CheckGeometry` |
-| Confronto versioni | ❌ | B | M | |
+| Confronto versioni | ✅ Forge | — | — | M8 (geometrico) |
 
 ## 11. Libreria di parti standard
 
 | Funzione | FreeCAD | Gravità | Sforzo | Note |
 |---|---|---|---|---|
 | Viteria/cuscinetti/profili standard | 🧩 | M | M | Addon Fasteners, Parts Library |
-| Design library personale (drag & drop) | 🟡 | M | S | Parts Library addon; nessun pannello integrato |
+| Design library personale (drag & drop) | 🟡 Forge | B | S | Aggiungi/inserisci da menu (M8); niente trascinamento |
 
 ## 12. Rendering / aspetti
 
@@ -183,7 +183,7 @@ Legenda
 | Barra heads-up nella vista | 🟡 | M | S | Navigation cube + overlay; manca barra viste/sezione/stile |
 | Menu contestuale nella vista (quote/feature/schizzo) | 🟡 | M | S | |
 | Autosalvataggio con ripristino | ✅ | — | — | Recovery file già presenti |
-| Pack and Go | ❌ | B | S | |
+| Pack and Go | ✅ Forge (ridotto) | B | S | Dipendenze nella cartella del documento (M8) |
 
 ## Riepilogo: divari ad alta gravità
 

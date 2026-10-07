@@ -304,3 +304,29 @@ class TestEquationsGui(unittest.TestCase):
                 dialog.deleteLater()
         finally:
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestM8Gui(unittest.TestCase):
+    def test_thickness_and_compare(self):
+        import Part
+
+        doc = FreeCAD.newDocument("ForgeM8Gui")
+        try:
+            plate = doc.addObject("Part::Feature", "Piastra")
+            plate.Shape = Part.makeBox(60, 40, 10).fuse(Part.makeBox(1, 40, 20, Vector(30, 0, 10))).removeSplitter()
+            newer = doc.addObject("Part::Feature", "PiastraNuova")
+            newer.Shape = Part.makeBox(60, 40, 12)
+            doc.recompute()
+            result, faces = evaluate_gui.run_thickness_analysis(plate, 2)
+            self.assertEqual(len(result.ViewObject.DiffuseColor), len(plate.Shape.Faces))
+            self.assertIn(evaluate.THIN, {f.kind for f in faces})
+            self.assertEqual(evaluate_gui.clear_thickness_analysis(doc), 1)
+            comparison = evaluate_gui.run_compare(plate, newer)
+            group = doc.getObject(evaluate_gui.COMPARE_GROUP)
+            self.assertEqual(len(group.Group), 2)
+            self.assertAlmostEqual(comparison.added_volume, 60 * 40 * 2 - 1 * 40 * 2, places=6)  # meno la costola
+            for name in ("Forge_ThicknessAnalysis", "Forge_Compare", "Forge_PackAndGo",
+                         "Forge_LibraryAdd", "Forge_LibraryInsert"):
+                self.assertIn(name, FreeCADGui.listCommands())
+        finally:
+            FreeCAD.closeDocument(doc.Name)

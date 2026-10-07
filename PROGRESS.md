@@ -32,11 +32,16 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
   - [x] M1.6 Menu radiale contestuale (comando `Forge_RadialMenu`, tasto S con le impostazioni SolidWorks).
         Le mouse gestures restano quelle dello stile di navigazione "Gesture" di FreeCAD (non replicate).
 
-- **M8 (parte anticipata) — Valutazione: interferenze e sformo, completata.**
+- **M8 — Valutazione e produttività: completata (parziale)** (tag `forge-m8`).
   - [x] `forgelib/evaluate.py`: interferenze/contatti/giochi tra coppie di solidi (Link e assiemi in posizione
         globale), analisi di sformo per faccia (positivo, negativo, insufficiente, a cavallo).
   - [x] Comandi "Rileva interferenze" (schede Valuta e Assieme) e "Analisi di sformo" (scheda Valuta).
         Parametri: `Clearance` (gioco minimo, mm), `MinDraftAngle` (gradi).
+  - [x] Analisi di spessore per faccia (raggio verso l'interno, parametro `MinThickness`) e confronto tra versioni
+        (materiale aggiunto/tolto con volumi) nella scheda Valuta.
+  - [x] Pack and Go (copia con struttura relativa; dipendenze fuori cartella segnalate) e libreria personale di componenti
+        (`<dati utente>/Forge/Libreria`, inserimento come link o copia) nel menu Forge (`forgelib/productivity.py`).
+  - [ ] Residui: analisi di curvatura/zebra; Pack and Go con rinomina e dipendenze esterne; pannello libreria trascinabile.
 
 - **M2 — Schizzo: completata** (tag `forge-m2`; M2.2 rimandata).
   - [x] M2.1 Diagnosi schizzo (`forgelib/sketch_doctor.py`, comando "Diagnosi schizzo" nella scheda Schizzo e nella
@@ -125,7 +130,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M8 — Resto della valutazione e produttività: analisi di spessore, confronto tra versioni, Pack and Go, libreria personale.
+Consegna: README.md in italiano, installazione locale (`pixi run install`), GAP_ANALYSIS aggiornato, test completi.
 
 ## Problemi noti
 
@@ -260,4 +265,12 @@ default vero), `LastTab` (stringa).
 1. Scheda Feature → Equazioni → "Nuova variabile globale" `spessore` = `8 mm`.
 2. Nella proprietà Length di un Pad scrivere l'espressione `Variabili.spessore * 2`; riaprire Equazioni: compare nella tabella
    con il valore 16 mm. Modificare l'equazione dalla tabella; un'equazione errata viene rifiutata con un messaggio.
+
+### M8 — Spessore, confronto, Pack and Go, libreria
+1. Pezzo con una costola sottile → Valuta → Analisi di spessore (minimo 2 mm): facce sottili in rosso. Rieseguire per togliere.
+2. Selezionare la versione vecchia e poi quella nuova di un pezzo → Confronta versioni: gruppo "Confronto" con aggiunto (verde)
+   e tolto (rosso) e volumi nel messaggio.
+3. Menu Forge → Pack and Go su un assieme salvato con parti in sottocartelle: la cartella di destinazione contiene tutto e,
+   aprendo l'assieme copiato (chiudendo gli originali), i componenti si caricano dalle copie.
+4. Menu Forge → Aggiungi alla libreria / Inserisci dalla libreria.
 

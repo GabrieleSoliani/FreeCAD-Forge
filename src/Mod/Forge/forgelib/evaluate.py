@@ -161,3 +161,86 @@ def summarize_draft(faces):
     for face in faces:
         counts[face.kind] = counts.get(face.kind, 0) + 1
     return counts
+
+
+# --- analisi di spessore -----------------------------------------------------------------------
+
+THIN = "sottile"
+THICK = "spessore ok"
+
+
+@dataclass
+class FaceThickness:
+    index: int
+    minimum: float  # spessore minimo misurato sulla faccia (mm)
+    kind: str
+
+
+def local_thickness(shape, point, normal, max_length):
+    """Spessore lungo -normale da un punto della superficie: lunghezza del primo tratto nel materiale."""
+    import Part
+
+    n = Vector(normal)
+    n.normalize()
+    start = point.add(Vector(n).multiply(1e-6))
+    end = point.sub(Vector(n).multiply(max_length))
+    probe = Part.LineSegment(start, end).toShape()
+    inside = shape.common(probe)
+    if inside.isNull() or not inside.Edges:
+        return None
+    lengths = sorted(
+        (e for e in inside.Edges), key=lambda e: min(v.Point.distanceToPoint(point) for v in e.Vertexes)
+    )
+    return lengths[0].Length
+
+
+def thickness_analysis(shape, minimum, samples=3):
+    """Spessore minimo per faccia (campionato) e classificazione rispetto a ``minimum``."""
+    max_length = shape.BoundBox.DiagonalLength * 1.01
+    result = []
+    for index, face in enumerate(shape.Faces, start=1):
+        u0, u1, v0, v1 = face.ParameterRange
+        values = []
+        for i in range(samples):
+            for j in range(samples):
+                u = u0 + (u1 - u0) * (i + 0.5) / samples
+                v = v0 + (v1 - v0) * (j + 0.5) / samples
+                point = face.valueAt(u, v)
+                if not face.isInside(point, 1e-6, True):
+                    continue
+                t = local_thickness(shape, point, face.normalAt(u, v), max_length)
+                if t is not None:
+                    values.append(t)
+        if not values:
+            continue
+        low = min(values)
+        result.append(FaceThickness(index, low, THIN if low < minimum - 1e-9 else THICK))
+    return result
+
+
+THICKNESS_COLORS = {THIN: (0.85, 0.20, 0.20), THICK: (0.20, 0.70, 0.25)}
+
+
+# --- confronto tra versioni --------------------------------------------------------------------
+
+
+@dataclass
+class Comparison:
+    added: object  # materiale presente solo nella nuova versione
+    removed: object  # materiale presente solo nella vecchia versione
+    added_volume: float
+    removed_volume: float
+
+    @property
+    def identical(self):
+        return self.added_volume < 1e-6 and self.removed_volume < 1e-6
+
+
+def compare_shapes(old, new):
+    added = new.cut(old)
+    removed = old.cut(new)
+    return Comparison(
+        added, removed,
+        0.0 if added.isNull() else added.Volume,
+        0.0 if removed.isNull() else removed.Volume,
+    )
