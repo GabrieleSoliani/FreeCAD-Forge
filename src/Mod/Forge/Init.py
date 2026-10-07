@@ -8,4 +8,5 @@ FreeCAD.__unit_test__ += [
     "ForgeTests.TestForgeRobustness",
     "ForgeTests.TestForgeDiagnostics",
     "ForgeTests.TestForgeExamples",
+    "ForgeTests.TestForgeEvaluate",
 ]

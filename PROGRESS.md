@@ -32,6 +32,12 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
   - [x] M1.6 Menu radiale contestuale (comando `Forge_RadialMenu`, tasto S con le impostazioni SolidWorks).
         Le mouse gestures restano quelle dello stile di navigazione "Gesture" di FreeCAD (non replicate).
 
+- **M8 (parte anticipata) — Valutazione: interferenze e sformo, completata.**
+  - [x] `forgelib/evaluate.py`: interferenze/contatti/giochi tra coppie di solidi (Link e assiemi in posizione
+        globale), analisi di sformo per faccia (positivo, negativo, insufficiente, a cavallo).
+  - [x] Comandi "Rileva interferenze" (schede Valuta e Assieme) e "Analisi di sformo" (scheda Valuta).
+        Parametri: `Clearance` (gioco minimo, mm), `MinDraftAngle` (gradi).
+
 ## Ambiente e comandi (Windows locale)
 
 Toolchain: pixi 0.81 + MSVC 14.44 (Build Tools 2022), Ninja, ccache, Qt 6.11, Python 3.13, OCCT 8.0.
@@ -69,7 +75,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-Merge da upstream (dopo 2 milestone), poi M8 parziale: rilevamento interferenze e analisi di sformo.
+M2 — Schizzo: diagnosi dei vincoli in conflitto con proposta di soluzione (stile SketchXpert).
 
 ## Problemi noti
 
@@ -140,4 +146,11 @@ default vero), `LastTab` (stringa).
 2. Scheda Valuta → Diagnostica feature: finestra con "Il raggio massimo applicabile è circa 4.95 mm" (o simile);
    gli spigoli del raccordo risultano selezionati nella vista.
 3. Una tasca con lo schizzo fuori dal pezzo: avviso "La feature non rimuove materiale…".
+
+### M8 — Interferenze e sformo
+1. Due cubi sovrapposti (Part → Cubo, spostarne uno di 8 mm in X). Scheda Valuta → Rileva interferenze: finestra
+   "Interferenze: 1" con il volume (200 mm³); nel gruppo "Interferenze" un solido rosso nella zona comune.
+2. Selezionando due soli oggetti, il controllo riguarda solo quelli. In un assieme attivo, i suoi componenti.
+3. Selezionare un corpo (o una sua faccia piana come direzione) → Analisi di sformo: copia colorata (verde, rosso,
+   giallo, blu) e originale nascosto. Rieseguire il comando: l'analisi sparisce e l'originale ricompare.
 

@@ -45,3 +45,11 @@ documentato: per modelli grandi andrebbe profilato caso per caso).
 
 Nota per gli script: una serie (PolarPattern ecc.) creata con `body.newObject` senza `Originals` non
 diventa `Tip` del corpo; il comando GUI lo fa. Negli script impostare `body.Tip = serie`.
+
+## M8 — Valutazione
+
+| Scenario | Standard: passaggi | Forge: passaggi |
+|---|---|---|
+| Interferenze tra N componenti | Nessuno strumento: booleana "Comune" a mano per ogni coppia (N(N-1)/2 operazioni) | 1 comando, tutte le coppie, volumi e solidi evidenziati |
+| Analisi di sformo | Non disponibile | 1 comando (selezione + clic) |
+

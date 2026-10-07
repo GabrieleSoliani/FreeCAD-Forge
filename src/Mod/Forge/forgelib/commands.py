@@ -48,6 +48,9 @@ def register():
     register_rollback()
     register_radial()
     register_diagnostics()
+    from forgelib import evaluate_gui
+
+    evaluate_gui.register()
 
 
 def offer_settings_once():

@@ -92,4 +92,4 @@ class ForgeWorkbench(Workbench):
 
 Gui.addWorkbench(ForgeWorkbench())
 
-FreeCAD.__unit_test__ += ["ForgeTests.TestForgeGui"]
+FreeCAD.__unit_test__ += ["ForgeTests.TestForgeGui", "ForgeTests.TestForgeEvaluateGui"]
