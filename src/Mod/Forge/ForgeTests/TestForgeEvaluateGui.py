@@ -278,3 +278,29 @@ class TestConfigurationsGui(unittest.TestCase):
                 dialog.deleteLater()
         finally:
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestEquationsGui(unittest.TestCase):
+    def test_dialog_edits_equation(self):
+        from ForgeTests import models
+        from forgelib import equations, equations_gui
+
+        doc = FreeCAD.newDocument("ForgeEquationsGui")
+        try:
+            body, pad, pocket = models.block_with_hole(doc)
+            equations.add_variable(doc, "alto", "12 mm")
+            equations.set_equation(pad, "Length", "Variabili.alto")
+            dialog = equations_gui.EquationsDialog(doc)
+            try:
+                self.assertEqual(dialog.table.rowCount(), 1)
+                self.assertEqual(dialog.variables.rowCount(), 1)
+                dialog.table.item(0, 2).setText("Variabili.alto + 3 mm")
+                self.assertAlmostEqual(float(pad.Length), 15, places=9)
+                dialog.table.item(0, 2).setText("errore(")
+                self.assertIn("non valida", dialog.messages.text())
+                self.assertAlmostEqual(float(pad.Length), 15, places=9)
+            finally:
+                dialog.close()
+                dialog.deleteLater()
+        finally:
+            FreeCAD.closeDocument(doc.Name)

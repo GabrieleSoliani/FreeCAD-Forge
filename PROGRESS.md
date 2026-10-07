@@ -76,13 +76,17 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         designazione e serie di componenti) come foglio collegato e palloncini numerati sulla vista frontale.
   - [ ] Residui: importazione delle quote di modello, quotatura automatica ordinata, tabella fori, DWG (serve ODA).
 
-- **M4 — Feature mancanti: in corso.**
+- **M4 — Feature mancanti: completata (parziale)** (tag `forge-m4`).
   - [x] M4.1 Configurazioni (`forgelib/features/configurations.py`, comando "Configurazioni" nella scheda Feature):
         tabella configurazioni × parametri `Oggetto.Proprietà` con soppressione (`Suppressed`), configurazione attiva,
         cattura dei valori correnti, importazione di una tabella dati da foglio di calcolo, salvataggio nel documento.
   - [x] M4.2 Nervatura (`forgelib/features/rib.py`, comando "Nervatura" nella scheda Feature): profilo aperto prolungato
         fino al materiale nel piano dello schizzo, regione chiusa estrusa simmetricamente; `Reversed` per l'altro lato.
-  - [ ] M4.3 Gestore equazioni unificato.
+  - [x] M4.3 Equazioni (`forgelib/equations.py`, comando "Equazioni" nella scheda Feature): tutte le espressioni del
+        documento in una tabella modificabile con verifica prima dell'applicazione, variabili globali in un VarSet
+        "Variabili" (`Variabili.nome` nelle equazioni), alias dei fogli di calcolo.
+  - [ ] Residui: Instant3D (maniglie di trascinamento delle quote nella vista), serie da tabella/con varianti,
+        avvolgi/deforma/flessione, scritte su superfici curve.
 
 ## Ambiente e comandi (Windows locale)
 
@@ -121,7 +125,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M4.2 nervatura (rib) da profilo aperto.
+M8 — Resto della valutazione e produttività: analisi di spessore, confronto tra versioni, Pack and Go, libreria personale.
 
 ## Problemi noti
 
@@ -251,4 +255,9 @@ default vero), `LastTab` (stringa).
 1. Staffa a L: schizzo sul piano YZ (spostato a metà lunghezza) con una linea diagonale tra base e ala.
 2. Selezionare lo schizzo → scheda Feature → Nervatura: compare un fazzoletto triangolare spesso 3 mm, centrato sul piano.
 3. Accorciare la linea in modo che non tocchi il pezzo: la nervatura si prolunga comunque fino alle facce.
+
+### M4.3 — Equazioni
+1. Scheda Feature → Equazioni → "Nuova variabile globale" `spessore` = `8 mm`.
+2. Nella proprietà Length di un Pad scrivere l'espressione `Variabili.spessore * 2`; riaprire Equazioni: compare nella tabella
+   con il valore 16 mm. Modificare l'equazione dalla tabella; un'equazione errata viene rifiutata con un messaggio.
 

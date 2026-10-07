@@ -78,6 +78,9 @@ def register():
     from forgelib.features import rib
 
     rib.register()
+    from forgelib import equations_gui
+
+    equations_gui.register()
 
 
 def offer_settings_once():

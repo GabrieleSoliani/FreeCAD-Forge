@@ -122,7 +122,7 @@ Legenda
 
 | Funzione | FreeCAD | Gravità | Sforzo | Note |
 |---|---|---|---|---|
-| Variabili globali ed equazioni | ✅ | — | — | Espressioni, `VarSet`, Spreadsheet; manca un gestore unico |
+| Variabili globali ed equazioni | ✅ Forge | — | — | Gestore unico "Equazioni" (M4.3) |
 | Configurazioni con parametri | 🟡 | M | M | "Configuration table" dello Spreadsheet |
 | Soppressione per configurazione | ✅ Forge | — | — | Configurazioni (M4.1) |
 | Tabella dati (design table) | ✅ Forge | — | — | Importazione da foglio di calcolo (M4.1) |

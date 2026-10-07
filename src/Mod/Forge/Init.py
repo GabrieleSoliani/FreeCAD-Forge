@@ -19,4 +19,5 @@ FreeCAD.__unit_test__ += [
     "ForgeTests.TestForgeDrawing",
     "ForgeTests.TestForgeConfigurations",
     "ForgeTests.TestForgeRib",
+    "ForgeTests.TestForgeEquations",
 ]

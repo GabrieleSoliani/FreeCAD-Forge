@@ -197,6 +197,7 @@ TABS = (
             "PartDesign_CompDatums",
             "PartDesign_SubShapeBinder",
             "Forge_Configurations",
+            "Forge_Equations",
             "PartDesign_MoveTip",
             "Forge_RollbackPrevious",
             "Forge_RollbackNext",
