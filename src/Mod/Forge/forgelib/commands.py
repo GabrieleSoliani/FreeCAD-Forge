@@ -66,6 +66,9 @@ def register():
     from forgelib import structural_gui
 
     structural_gui.register()
+    from forgelib import assembly_gui
+
+    assembly_gui.register()
 
 
 def offer_settings_once():

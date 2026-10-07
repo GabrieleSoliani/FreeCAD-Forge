@@ -20,6 +20,9 @@ SET(ForgeLib_SRCS
     forgelib/features/sketch3d.py
     forgelib/features/profiles.py
     forgelib/features/structural.py
+    forgelib/features/fasteners.py
+    forgelib/features/component_pattern.py
+    forgelib/assembly_gui.py
     forgelib/structural_gui.py
     forgelib/sheetmetal.py
     forgelib/sheetmetal_gui.py
@@ -49,6 +52,8 @@ SET(ForgeTests_SRCS
     ForgeTests/TestForgeSketch3D.py
     ForgeTests/TestForgeSheetMetal.py
     ForgeTests/TestForgeStructural.py
+    ForgeTests/TestForgeFasteners.py
+    ForgeTests/TestForgeComponents.py
 )
 
 SET(Forge_Icons
@@ -68,6 +73,9 @@ SET(Forge_Icons
     Resources/icons/Forge_FlatDXF.svg
     Resources/icons/Forge_StructuralMember.svg
     Resources/icons/Forge_CutList.svg
+    Resources/icons/Forge_Fastener.svg
+    Resources/icons/Forge_ComponentPattern.svg
+    Resources/icons/Forge_MirrorComponent.svg
 )
 
 SET(Forge_ALL ${Forge_SRCS} ${ForgeLib_SRCS} ${ForgeTests_SRCS} ${Forge_Icons})

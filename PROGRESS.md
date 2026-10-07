@@ -59,6 +59,16 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         schizzi 3D con taglio a mitra; distinta di taglio (lunghezze asse/punta-punta, angoli, massa) in un foglio di calcolo;
         scheda "Saldature". Limiti: niente giunzioni a T/rifilature contro altri membri, niente spigoli curvi, niente UPN.
 
+- **M6 — Assiemi: completata (parziale)** (tag `forge-m6`).
+  - [x] M6.1 Toolbox viteria ISO 4762/4017/4032/7089 M3–M20 (`forgelib/features/fasteners.py`, comando "Viteria"):
+        dimensioni di norma, designazione per la distinta, posizionamento sul bordo di un foro con diametro proposto.
+        Semplificazioni: filettatura cosmetica (gambo al diametro nominale), smussi omessi.
+  - [x] M6.2 Serie lineare/circolare di componenti (array di link nativo che segue il seme) e specchiatura
+        (versione opposta) (`forgelib/features/component_pattern.py`, comandi nella scheda Assieme).
+  - [x] Interferenze in assieme (da M8).
+  - [ ] Residui (richiedono modifiche al solutore C++ OndselSolver): accoppiamenti larghezza/camma/slot, limiti
+        generalizzati, smart mates con Alt-trascinamento, componenti flessibili, modifica in contesto avanzata.
+
 ## Ambiente e comandi (Windows locale)
 
 Toolchain: pixi 0.81 + MSVC 14.44 (Build Tools 2022), Ninja, ccache, Qt 6.11, Python 3.13, OCCT 8.0.
@@ -96,7 +106,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-Merge da upstream (dopo M2 e M5), poi M6 — Assiemi (accoppiamenti avanzati, pattern/specchia componenti, viteria).
+M7 — Messa in tavola: viste automatiche, BOM collegata con palloncini automatici, cartiglio UNI con proprietà.
 
 ## Problemi noti
 
@@ -202,4 +212,11 @@ default vero), `LastTab` (stringa).
 1. Scheda Saldature → Schizzo 3D; impostare Points a un rettangolo e Closed = vero. Selezionarlo → Profilato strutturale:
    compaiono 4 tubi 40×40×3 tagliati a 45° agli spigoli. Cambiare Family/Size (es. IPE 100) e Rotation nelle proprietà.
 2. Distinta di taglio: foglio "Distinta di taglio" con posizione, profilo, lunghezze, angoli di taglio e massa (con totale).
+
+### M6 — Viteria, serie e specchiatura
+1. Piastra con un foro Ø9: selezionare il bordo superiore del foro → scheda Assieme → Viteria: il dialogo propone M8;
+   scegliere ISO 4762, lunghezza 30 → la vite compare con la testa appoggiata sulla piastra e il gambo nel foro.
+2. Selezionare un componente → Serie di componenti: compaiono 2 copie; nelle proprietà cambiare Count, Spacing, Mode=Circolare.
+   Spostando il componente originale le copie lo seguono.
+3. Selezionare un componente e (con Ctrl) una faccia piana → Specchia componente: compare la versione "(opposto)".
 

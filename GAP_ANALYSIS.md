@@ -97,13 +97,13 @@ Legenda
 | Meccanici (ingranaggio, cremagliera, vite, cinghia) | ✅ | — | — | |
 | Larghezza, slot, camma, limiti generalizzati | ❌ | M | M | Limiti solo su alcuni giunti |
 | Smart mates (trascina con Alt) | ❌ | M | M | |
-| Rilevamento interferenze / giochi | ❌ | **A** | S | Booleana comune tra coppie di componenti → M6/M8 (sforzo basso, impatto alto) |
+| Rilevamento interferenze / giochi | ✅ Forge | — | — | Comando "Rileva interferenze" (M8) |
 | Viste esplose | ✅ | — | — | Animazione limitata |
 | BOM assieme | ✅ | — | — | `BomObject` |
-| Pattern / specchia componenti | ❌ | M | M | Possibile con `App::Link` array |
+| Pattern / specchia componenti | ✅ Forge | — | — | Serie lineare/circolare parametrica e specchiatura (M6.2) |
 | Componenti flessibili (sottoassiemi) | 🟡 | M | M | |
 | Modifica in contesto / riferimenti esterni | 🟡 | M | L | Possibile ma fragile |
-| Toolbox viteria | 🧩 | M | M | Addon "Fasteners" (GPL) |
+| Toolbox viteria | ✅ Forge (ridotto) | B | M | ISO 4762/4017/4032/7089 M3–M20 con posizionamento sul foro (M6.1); niente filettatura modellata |
 
 ## 8. Messa in tavola
 

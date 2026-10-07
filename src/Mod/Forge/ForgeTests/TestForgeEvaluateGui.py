@@ -192,3 +192,34 @@ class TestStructuralGui(unittest.TestCase):
         finally:
             FreeCADGui.Selection.clearSelection()
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestAssemblyGui(unittest.TestCase):
+    def test_insert_fastener_on_selected_hole(self):
+        from forgelib import assembly_gui
+
+        doc = FreeCAD.newDocument("ForgeAssemblyGui")
+        try:
+            plate = doc.addObject("Part::Feature", "Piastra")
+            import Part
+
+            plate.Shape = Part.makeBox(50, 50, 10).cut(Part.makeCylinder(4.5, 10, Vector(25, 25, 0)))
+            doc.recompute()
+            top = [f"Edge{i + 1}" for i, e in enumerate(plate.Shape.Edges)
+                   if e.Curve.TypeId == "Part::GeomCircle" and abs(e.Curve.Center.z - 10) < 1e-9]
+            FreeCADGui.Selection.clearSelection()
+            FreeCADGui.Selection.addSelection(plate, top)
+            edge, shape = assembly_gui.selected_circle()
+            self.assertIsNotNone(edge)
+            from forgelib.features import fasteners
+
+            self.assertEqual(fasteners.size_for_hole(2 * edge.Curve.Radius), "M8")
+            screw = assembly_gui.insert_fastener(doc, "ISO 4762", "M8", 30, edge, shape)
+            self.assertEqual(screw.Label, "ISO 4762 M8x30")
+            self.assertLess(plate.Shape.common(screw.Shape).Volume, 1e-6)
+            self.assertAlmostEqual(screw.Shape.BoundBox.ZMax, 18, places=6)
+            for name in assembly_gui.ASSEMBLY_COMMANDS:
+                self.assertIn(name, FreeCADGui.listCommands())
+        finally:
+            FreeCADGui.Selection.clearSelection()
+            FreeCAD.closeDocument(doc.Name)

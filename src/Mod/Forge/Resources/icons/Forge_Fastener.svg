@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- Icona originale di FreeCAD Forge (viteria). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect x="18" y="4" width="28" height="14" rx="3" fill="#9aa5b1" stroke="#1f2a33" stroke-width="3"/>
+  <rect x="26" y="18" width="12" height="42" fill="#c8d0d8" stroke="#1f2a33" stroke-width="3"/>
+  <path d="M26 26l12 4M26 34l12 4M26 42l12 4M26 50l12 4" stroke="#1f2a33" stroke-width="2"/>
+</svg>
