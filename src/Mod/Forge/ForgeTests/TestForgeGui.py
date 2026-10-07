@@ -134,6 +134,34 @@ class TestForgeWorkbench(unittest.TestCase):
             FreeCADGui.updateGui()
             manager._follow_context()
 
+    def test_headsup_commands_exist(self):
+        from forgelib.ui import headsup
+
+        available = set(FreeCADGui.listCommands())
+        missing = [c for c in headsup.referenced_commands() if c not in available]
+        self.assertEqual(missing, [])
+
+    def test_headsup_follows_3d_view(self):
+        manager = FreeCADGui.getWorkbench("ForgeWorkbench")._manager
+        doc = FreeCAD.newDocument("ForgeHeadsUp")
+        try:
+            FreeCADGui.updateGui()
+            manager._follow_context()
+            self.assertTrue(manager.headsup.is_shown())
+            bar = manager.headsup.bar()
+            self.assertGreaterEqual(bar.x(), 0)
+            self.assertLessEqual(bar.x() + bar.width(), bar.parentWidget().width() + 1)
+            FreeCADGui.activateWorkbench("PartDesignWorkbench")
+            self.assertFalse(manager.headsup.is_shown())
+        finally:
+            FreeCAD.closeDocument(doc.Name)
+        FreeCADGui.activateWorkbench("ForgeWorkbench")
+        FreeCADGui.updateGui()
+        manager._timer.stop()
+        if FreeCADGui.ActiveDocument is None:
+            manager._follow_context()
+            self.assertFalse(manager.headsup.is_shown())
+
     def test_sketch_edit_outside_forge_unchanged(self):
         """Fuori da Forge la modifica dello schizzo passa ancora allo Sketcher (comportamento upstream)."""
         doc = FreeCAD.newDocument("ForgeSketchEditPD")

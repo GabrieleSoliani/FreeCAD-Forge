@@ -12,6 +12,7 @@ from PySide import QtCore, QtWidgets
 
 from forgelib.ui import catalog
 from forgelib.ui.context import Context, TabFollower
+from forgelib.ui.headsup import HeadsUpBar
 
 PARAM_PATH = "User parameter:BaseApp/Preferences/Mod/Forge"
 TOOLBAR_PARAMS = "User parameter:BaseApp/MainWindow/Toolbars"
@@ -33,10 +34,12 @@ def current_context():
     drawing = False
     sketch = False
     assembly = False
+    view3d = False
     gdoc = FreeCADGui.ActiveDocument
     if gdoc is not None:
         view = gdoc.ActiveView
         drawing = type(view).__name__ == "MDIViewPagePy"
+        view3d = type(view).__name__ == "View3DInventorPy"
         vp = gdoc.getInEdit()
         if vp is not None and hasattr(vp, "Object"):
             sketch = vp.Object.isDerivedFrom("Sketcher::SketchObject")
@@ -47,7 +50,12 @@ def current_context():
                 active = None
             assembly = active is not None and active.isDerivedFrom("Assembly::AssemblyObject")
 
-    return Context(drawing_page_active=drawing, sketch_in_edit=sketch, assembly_active=assembly)
+    return Context(
+        drawing_page_active=drawing,
+        sketch_in_edit=sketch,
+        assembly_active=assembly,
+        view3d_active=view3d,
+    )
 
 
 class CommandManager(QtCore.QObject):
@@ -86,6 +94,7 @@ class CommandManager(QtCore.QObject):
         # All'uscita i segnali Qt non devono più richiamare codice Python: la distruzione della
         # GUI rilascia i workbench Python mentre i widget sono ancora vivi.
         self._closed = False
+        self.headsup = HeadsUpBar()
         mw.mainWindowClosed.connect(self.shutdown)
         QtWidgets.QApplication.instance().aboutToQuit.connect(self.shutdown)
 
@@ -95,6 +104,7 @@ class CommandManager(QtCore.QObject):
             return
         self._closed = True
         self._timer.stop()
+        self.headsup.shutdown()
         for signal, slot in (
             (self._timer.timeout, self._follow_context),
             (self._tabbar.currentChanged, self._apply),
@@ -137,6 +147,7 @@ class CommandManager(QtCore.QObject):
         """Nasconde il command manager (alla disattivazione del workbench Forge)."""
         self._timer.stop()
         self._toolbar.hide()
+        self.headsup.set_wanted(False)
 
     def toolbar(self, name):
         return FreeCADGui.getMainWindow().findChild(QtWidgets.QToolBar, name)
@@ -191,6 +202,7 @@ class CommandManager(QtCore.QObject):
         except Exception as err:  # la GUI può essere in uno stato transitorio
             FreeCAD.Console.PrintLog(f"Forge: contesto non leggibile: {err}\n")
             return
+        self.headsup.set_wanted(context.view3d_active)
         key = None
         if _params().GetBool("AutoSwitchTabs", True):
             key = self._follower.update(context, self.current_key())

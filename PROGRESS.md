@@ -16,7 +16,8 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
   - [x] M1.3 Impostazioni stile SolidWorks (navigazione, Forge all'avvio, scorciatoie F, Ctrl+1..8,
         Ctrl+B) applicabili e annullabili dal menu Forge, proposte alla prima attivazione. Al posto di un
         preference pack (vedi `DECISIONS.md`).
-  - [ ] M1.4 Barra heads-up nella vista.
+  - [x] M1.4 Barra heads-up sovrapposta alla vista 3D (adatta, zoom finestra, orientamento, stile di
+        visualizzazione, sezione, nascondi/mostra, proiezione). Disattivabile con il parametro `ShowHeadsUp`.
   - [ ] M1.5 Rollback bar nell'albero (pilotando `Body.Tip`), cartelle, riordino con controllo dipendenze.
   - [ ] M1.6 Menu radiale contestuale / mouse gestures.
 
@@ -57,7 +58,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M1.4: barra heads-up nella vista 3D.
+M1.5: rollback bar e albero delle feature.
 
 ## Problemi noti
 
@@ -99,4 +100,12 @@ default vero), `LastTab` (stringa).
    `Ctrl+1`…`Ctrl+7` viste standard, `Ctrl+8` normale alla faccia selezionata, `Ctrl+B` ricostruisce.
 3. Riavviare FreeCAD: deve aprirsi direttamente in Forge.
 4. Menu Forge → "Ripristina impostazioni precedenti": tutto torna come prima (navigazione, scorciatoie, workbench di avvio).
+
+### M1.4 — Barra heads-up
+1. In Forge, con un documento aperto e la vista 3D attiva: in alto al centro della vista deve comparire una barra
+   semitrasparente con: Adatta, Zoom finestra, Orientamento (menu), Stile di visualizzazione (menu), Vista in sezione,
+   Nascondi/mostra, Proiezione (menu).
+2. Ridimensionare la finestra: la barra resta centrata. Aprire una pagina TechDraw: la barra sparisce; tornando
+   alla vista 3D ricompare. Passando a un altro workbench sparisce.
+3. Riferire se copre elementi importanti (es. il cubo di navigazione) o se i colori non si leggono col tema scuro.
 

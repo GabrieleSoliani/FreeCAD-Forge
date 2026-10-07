@@ -14,6 +14,7 @@ SET(ForgeLib_SRCS
     forgelib/ui/catalog.py
     forgelib/ui/context.py
     forgelib/ui/command_manager.py
+    forgelib/ui/headsup.py
 )
 
 SET(ForgeTests_SRCS

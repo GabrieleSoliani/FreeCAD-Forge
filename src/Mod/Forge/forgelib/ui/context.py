@@ -16,6 +16,7 @@ class Context:
     drawing_page_active: bool = False  # la vista attiva è una pagina TechDraw
     sketch_in_edit: bool = False  # uno schizzo è in modifica
     assembly_active: bool = False  # un assieme è l'oggetto attivo del documento
+    view3d_active: bool = False  # la vista attiva è una vista 3D (per la barra heads-up)
 
 
 def choose_tab(context):
