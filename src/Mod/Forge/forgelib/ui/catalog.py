@@ -112,6 +112,9 @@ TABS = (
                     "Sketcher_Scale",
                     "Sketcher_Offset",
                     "Sketcher_Symmetry",
+                    SEPARATOR,
+                    "Forge_SaveSketchBlock",
+                    "Forge_InsertSketchBlock",
                 ),
             ),
             (

@@ -54,6 +54,9 @@ def register():
     from forgelib import sketch_doctor_gui
 
     sketch_doctor_gui.register()
+    from forgelib import sketch_blocks_gui
+
+    sketch_blocks_gui.register()
 
 
 def offer_settings_once():

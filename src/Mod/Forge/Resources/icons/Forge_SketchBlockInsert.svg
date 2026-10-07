@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- Icona originale di FreeCAD Forge (inserisci blocco di schizzo). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect x="18" y="18" width="40" height="40" fill="none" stroke="#2b6cb0" stroke-width="3" stroke-dasharray="6 4"/>
+  <circle cx="38" cy="38" r="10" fill="none" stroke="#1f2a33" stroke-width="4"/>
+  <path d="M26 50h24" stroke="#1f2a33" stroke-width="4"/>
+  <path d="M4 4l16 16M20 8v12H8" fill="none" stroke="#d9822b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

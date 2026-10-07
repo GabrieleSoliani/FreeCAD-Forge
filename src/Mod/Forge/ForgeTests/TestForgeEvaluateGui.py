@@ -108,3 +108,24 @@ class TestSketchDoctorGui(unittest.TestCase):
         finally:
             dialog.close()
             dialog.deleteLater()
+
+
+class TestSketchBlocksGui(unittest.TestCase):
+    def test_selection_to_geometry_ids_and_names(self):
+        from ForgeTests import models
+        from forgelib import sketch_blocks_gui
+
+        doc = FreeCAD.newDocument("ForgeBlocksGui")
+        try:
+            body = models.new_body(doc)
+            sketch = models.add_rectangle(models.sketch_on(body, "S"), 0, 0, 20, 10)
+            doc.recompute()
+            FreeCADGui.Selection.clearSelection()
+            FreeCADGui.Selection.addSelection(sketch, ["Edge3", "Edge1", "Vertex2"])
+            self.assertEqual(sketch_blocks_gui.selected_geometry_ids(sketch), [0, 2])
+            self.assertEqual(sketch_blocks_gui.safe_file_name("Asola: 10/5"), "Asola 105")
+            for name in sketch_blocks_gui.BLOCK_COMMANDS:
+                self.assertIn(name, FreeCADGui.listCommands())
+        finally:
+            FreeCADGui.Selection.clearSelection()
+            FreeCAD.closeDocument(doc.Name)

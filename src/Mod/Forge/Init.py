@@ -10,4 +10,5 @@ FreeCAD.__unit_test__ += [
     "ForgeTests.TestForgeExamples",
     "ForgeTests.TestForgeEvaluate",
     "ForgeTests.TestForgeSketchDoctor",
+    "ForgeTests.TestForgeSketchBlocks",
 ]
