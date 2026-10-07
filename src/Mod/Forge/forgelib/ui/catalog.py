@@ -80,6 +80,7 @@ TABS = (
             "Sketcher_MergeSketches",
             SEPARATOR,
             "Sketcher_ValidateSketch",
+            "Forge_SketchDoctor",
         ),
         edit_groups=(
             (
@@ -132,6 +133,7 @@ TABS = (
                     "Sketcher_SelectElementsWithDoFs",
                     "Sketcher_SelectConflictingConstraints",
                     "Sketcher_SelectRedundantConstraints",
+                    "Forge_SketchDoctor",
                 ),
             ),
         ),

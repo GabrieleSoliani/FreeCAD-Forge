@@ -12,6 +12,8 @@ SET(ForgeLib_SRCS
     forgelib/diagnostics.py
     forgelib/evaluate.py
     forgelib/evaluate_gui.py
+    forgelib/sketch_doctor.py
+    forgelib/sketch_doctor_gui.py
     forgelib/rollback.py
     forgelib/settings.py
     forgelib/ui/__init__.py
@@ -33,6 +35,7 @@ SET(ForgeTests_SRCS
     ForgeTests/examples.py
     ForgeTests/TestForgeEvaluate.py
     ForgeTests/TestForgeEvaluateGui.py
+    ForgeTests/TestForgeSketchDoctor.py
 )
 
 SET(Forge_Icons
@@ -44,6 +47,7 @@ SET(Forge_Icons
     Resources/icons/Forge_Diagnostics.svg
     Resources/icons/Forge_Interference.svg
     Resources/icons/Forge_DraftAnalysis.svg
+    Resources/icons/Forge_SketchDoctor.svg
 )
 
 SET(Forge_ALL ${Forge_SRCS} ${ForgeLib_SRCS} ${ForgeTests_SRCS} ${Forge_Icons})

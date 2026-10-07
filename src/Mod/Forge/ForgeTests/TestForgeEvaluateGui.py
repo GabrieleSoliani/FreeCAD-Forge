@@ -67,3 +67,44 @@ class TestEvaluateGui(unittest.TestCase):
     def test_commands_registered(self):
         for name in evaluate_gui.EVALUATE_COMMANDS:
             self.assertIn(name, FreeCADGui.listCommands())
+
+
+class TestSketchDoctorGui(unittest.TestCase):
+    def setUp(self):
+        import Sketcher
+
+        from ForgeTests import models
+
+        self.doc = FreeCAD.newDocument("ForgeSketchDoctorGui")
+        body = models.new_body(self.doc)
+        self.sketch = models.add_rectangle(models.sketch_on(body, "S"), 0, 0, 20, 10)
+        self.sketch.addConstraint(Sketcher.Constraint("Horizontal", 0))
+        self.sketch.addConstraint(Sketcher.Constraint("Horizontal", 2))
+        self.sketch.addConstraint(Sketcher.Constraint("Vertical", 1))
+        self.sketch.addConstraint(Sketcher.Constraint("Vertical", 3))
+        self.sketch.addConstraint(Sketcher.Constraint("DistanceX", 0, 1, 0, 2, 20))
+        self.sketch.addConstraint(Sketcher.Constraint("DistanceX", 2, 2, 2, 1, 25))
+        self.doc.recompute()
+        FreeCADGui.Selection.clearSelection()
+        FreeCADGui.Selection.addSelection(self.sketch)
+
+    def tearDown(self):
+        FreeCADGui.Selection.clearSelection()
+        FreeCAD.closeDocument(self.doc.Name)
+
+    def test_dialog_lists_and_applies_fix(self):
+        from forgelib import sketch_doctor, sketch_doctor_gui
+
+        self.assertIs(sketch_doctor_gui.target_sketch(), self.sketch)
+        self.assertTrue(FreeCADGui.isCommandActive("Forge_SketchDoctor"))
+        dialog = sketch_doctor_gui.SketchDoctorDialog(self.sketch)
+        try:
+            self.assertGreaterEqual(dialog.list.count(), 2)
+            self.assertIn("conflitto", dialog.summary.text())
+            dialog.apply_selected()
+            self.assertTrue(sketch_doctor.analyze(self.sketch).ok)
+            self.assertEqual(dialog.list.count(), 0)
+            self.assertFalse(dialog.apply_button.isEnabled())
+        finally:
+            dialog.close()
+            dialog.deleteLater()

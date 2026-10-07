@@ -38,6 +38,14 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
   - [x] Comandi "Rileva interferenze" (schede Valuta e Assieme) e "Analisi di sformo" (scheda Valuta).
         Parametri: `Clearance` (gioco minimo, mm), `MinDraftAngle` (gradi).
 
+- **M2 — Schizzo: in corso.**
+  - [x] M2.1 Diagnosi schizzo (`forgelib/sketch_doctor.py`, comando "Diagnosi schizzo" nella scheda Schizzo e nella
+        toolbar Vincoli): stato (gradi di libertà, conflitti, ridondanze, malformati) e correzioni verificate una per una
+        disattivando temporaneamente ciascun vincolo sospetto; quote proposte per prime; applicazione annullabile.
+  - [ ] M2.2 Inferenze più ricche durante il disegno.
+  - [ ] M2.3 Blocchi di schizzo riutilizzabili.
+  - [ ] M2.4 Schizzo 3D (versione ridotta).
+
 ## Ambiente e comandi (Windows locale)
 
 Toolchain: pixi 0.81 + MSVC 14.44 (Build Tools 2022), Ninja, ccache, Qt 6.11, Python 3.13, OCCT 8.0.
@@ -75,7 +83,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M2 — Schizzo: diagnosi dei vincoli in conflitto con proposta di soluzione (stile SketchXpert).
+M2.3 blocchi di schizzo (inserire un gruppo di geometrie e vincoli salvato da file in uno schizzo).
 
 ## Problemi noti
 
@@ -153,4 +161,10 @@ default vero), `LastTab` (stringa).
 2. Selezionando due soli oggetti, il controllo riguarda solo quelli. In un assieme attivo, i suoi componenti.
 3. Selezionare un corpo (o una sua faccia piana come direzione) → Analisi di sformo: copia colorata (verde, rosso,
    giallo, blu) e originale nascosto. Rieseguire il comando: l'analisi sparisce e l'originale ricompare.
+
+### M2.1 — Diagnosi schizzo
+1. Schizzo rettangolo con orizzontali/verticali, quotare la base 20 e poi la linea opposta 25: lo schizzo va in conflitto.
+2. Scheda Schizzo (o toolbar Vincoli in modifica) → Diagnosi schizzo: la finestra elenca i vincoli in conflitto e propone
+   "Elimina #… Distanza orizzontale 25 mm (Linea 3) → gradi di libertà: …" e simili.
+3. "Applica correzione": il conflitto sparisce; Ctrl+Z ripristina il vincolo.
 
