@@ -249,3 +249,32 @@ class TestDrawingGui(unittest.TestCase):
         finally:
             FreeCADGui.Selection.clearSelection()
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestConfigurationsGui(unittest.TestCase):
+    def test_dialog_edit_and_activate(self):
+        from ForgeTests import models
+        from forgelib import configurations_gui
+        from forgelib.features import configurations as cf
+
+        doc = FreeCAD.newDocument("ForgeConfigurationsGui")
+        try:
+            body, pad, pocket = models.block_with_hole(doc)
+            cfg = cf.make_configurations(doc)
+            cf.add_parameter(cfg, "Pocket.Suppressed")
+            cf.add_configuration(cfg, "Senza foro")
+            dialog = configurations_gui.ConfigurationsDialog(cfg)
+            try:
+                self.assertEqual(dialog.table.rowCount(), 1)
+                self.assertEqual(dialog.table.columnCount(), 2)
+                dialog.table.item(0, 1).setText("true")  # salva nella tabella
+                dialog.active.setCurrentText("Senza foro")
+                dialog.activate_selected()
+                self.assertTrue(pocket.Suppressed)
+                self.assertAlmostEqual(body.Shape.Volume, 2000, places=6)
+                self.assertIn("Senza foro", dialog.messages.text())
+            finally:
+                dialog.close()
+                dialog.deleteLater()
+        finally:
+            FreeCAD.closeDocument(doc.Name)

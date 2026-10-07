@@ -72,6 +72,9 @@ def register():
     from forgelib import drawing_gui
 
     drawing_gui.register()
+    from forgelib import configurations_gui
+
+    configurations_gui.register()
 
 
 def offer_settings_once():

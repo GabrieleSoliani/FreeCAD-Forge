@@ -76,6 +76,13 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         designazione e serie di componenti) come foglio collegato e palloncini numerati sulla vista frontale.
   - [ ] Residui: importazione delle quote di modello, quotatura automatica ordinata, tabella fori, DWG (serve ODA).
 
+- **M4 — Feature mancanti: in corso.**
+  - [x] M4.1 Configurazioni (`forgelib/features/configurations.py`, comando "Configurazioni" nella scheda Feature):
+        tabella configurazioni × parametri `Oggetto.Proprietà` con soppressione (`Suppressed`), configurazione attiva,
+        cattura dei valori correnti, importazione di una tabella dati da foglio di calcolo, salvataggio nel documento.
+  - [ ] M4.2 Nervatura (rib).
+  - [ ] M4.3 Gestore equazioni unificato.
+
 ## Ambiente e comandi (Windows locale)
 
 Toolchain: pixi 0.81 + MSVC 14.44 (Build Tools 2022), Ninja, ccache, Qt 6.11, Python 3.13, OCCT 8.0.
@@ -113,7 +120,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M4 — Feature mancanti: configurazioni con soppressione, gestore equazioni unificato, nervatura (rib), Instant3D.
+M4.2 nervatura (rib) da profilo aperto.
 
 ## Problemi noti
 
@@ -232,4 +239,10 @@ default vero), `LastTab` (stringa).
    un'assonometria e il cartiglio compilato (titolo = nome del pezzo, scala, data, tolleranze generali).
 2. Selezionare piastra + 2 viti uguali + 1 dado → Tavola automatica: in alto a destra la distinta (3 righe, viti con
    quantità 2) e tre palloncini numerati sulla vista frontale. Verificare che le frecce puntino ai componenti giusti.
+
+### M4.1 — Configurazioni
+1. Pezzo con Pad e Pocket → scheda Feature → Configurazioni: "Aggiungi parametro" `Pocket.Suppressed` e `Pad.Length`.
+2. "Nuova configurazione" "Senza foro": nella tabella mettere `true` nella colonna Senza foro della riga Pocket.Suppressed.
+3. Scegliere la configurazione e "Attiva": il foro sparisce; tornando a Standard ricompare. Salvare, riaprire: resta attiva
+   l'ultima configurazione.
 

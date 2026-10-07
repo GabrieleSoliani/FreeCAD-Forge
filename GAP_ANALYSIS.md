@@ -124,8 +124,8 @@ Legenda
 |---|---|---|---|---|
 | Variabili globali ed equazioni | ✅ | — | — | Espressioni, `VarSet`, Spreadsheet; manca un gestore unico |
 | Configurazioni con parametri | 🟡 | M | M | "Configuration table" dello Spreadsheet |
-| Soppressione per configurazione | ❌ | M | M | → M4 |
-| Tabella dati (design table) | 🟡 | M | M | |
+| Soppressione per configurazione | ✅ Forge | — | — | Configurazioni (M4.1) |
+| Tabella dati (design table) | ✅ Forge | — | — | Importazione da foglio di calcolo (M4.1) |
 
 ## 10. Valutazione
 
