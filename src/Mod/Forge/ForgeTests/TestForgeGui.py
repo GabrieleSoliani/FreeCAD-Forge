@@ -268,3 +268,37 @@ def tearDownModule():
     manager = getattr(FreeCADGui.getWorkbench("ForgeWorkbench"), "_manager", None)
     if manager is not None:
         manager.shutdown()
+
+
+class TestForgeRadial(unittest.TestCase):
+    def setUp(self):
+        self.previous = FreeCADGui.activeWorkbench().name()
+        FreeCADGui.activateWorkbench("ForgeWorkbench")
+        FreeCADGui.getWorkbench("ForgeWorkbench")._manager._timer.stop()
+
+    def tearDown(self):
+        FreeCADGui.activateWorkbench(self.previous)
+
+    def test_radial_items_exist(self):
+        from forgelib.ui.radial import RADIAL_ITEMS
+
+        available = set(FreeCADGui.listCommands())
+        for key in ("sketch", "part"):
+            missing = [c for c in RADIAL_ITEMS[key] if c not in available]
+            self.assertEqual(missing, [], key)
+
+    def test_radial_menu_opens_with_part_commands(self):
+        from forgelib.ui.radial import RADIAL_ITEMS, show_radial_menu
+
+        doc = FreeCAD.newDocument("ForgeRadial")
+        try:
+            FreeCADGui.updateGui()
+            menu = show_radial_menu()
+            FreeCADGui.updateGui()
+            names = [b.objectName() for b in menu.findChildren(QtWidgets.QToolButton)]
+            self.assertEqual(names, list(RADIAL_ITEMS["part"]))
+            self.assertTrue(menu.isVisible())
+            menu.close()
+            FreeCADGui.updateGui()
+        finally:
+            FreeCAD.closeDocument(doc.Name)

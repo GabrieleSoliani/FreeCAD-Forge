@@ -16,6 +16,7 @@ SET(ForgeLib_SRCS
     forgelib/ui/context.py
     forgelib/ui/command_manager.py
     forgelib/ui/headsup.py
+    forgelib/ui/radial.py
 )
 
 SET(ForgeTests_SRCS
@@ -30,6 +31,7 @@ SET(Forge_Icons
     Resources/icons/Forge_Rollback_prev.svg
     Resources/icons/Forge_Rollback_next.svg
     Resources/icons/Forge_Rollback_end.svg
+    Resources/icons/Forge_RadialMenu.svg
 )
 
 SET(Forge_ALL ${Forge_SRCS} ${ForgeLib_SRCS} ${ForgeTests_SRCS} ${Forge_Icons})

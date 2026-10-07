@@ -36,6 +36,7 @@ SHORTCUTS = {
     "Std_ViewIsometric": "Ctrl+7",
     "Std_AlignToSelection": "Ctrl+8",  # "Normale a"
     "Std_Refresh": "Ctrl+B",  # "Ricostruisci"
+    "Forge_RadialMenu": "S",  # "shortcut bar" di SolidWorks
 }
 
 

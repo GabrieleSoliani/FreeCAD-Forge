@@ -8,6 +8,7 @@ from PySide import QtCore, QtWidgets
 from forgelib import settings
 
 SETTINGS_COMMANDS = ["Forge_ApplySolidWorksSettings", "Forge_RevertSettings"]
+MENU_COMMANDS = ["Forge_RadialMenu"]
 
 
 class _ApplySettings:
@@ -15,7 +16,7 @@ class _ApplySettings:
         return {
             "MenuText": "Impostazioni stile SolidWorks",
             "ToolTip": "Navigazione SolidWorks, Forge all'avvio e scorciatoie SolidWorks "
-            "(F, Ctrl+1…Ctrl+8, Ctrl+B). Le impostazioni precedenti vengono salvate.",
+            "(F, Ctrl+1…Ctrl+8, Ctrl+B, S menu radiale). Le impostazioni precedenti vengono salvate.",
         }
 
     def IsActive(self):
@@ -45,6 +46,7 @@ def register():
     FreeCADGui.addCommand("Forge_ApplySolidWorksSettings", _ApplySettings())
     FreeCADGui.addCommand("Forge_RevertSettings", _RevertSettings())
     register_rollback()
+    register_radial()
 
 
 def offer_settings_once():
@@ -145,3 +147,25 @@ def register_rollback():
         _RollbackCommand("end", "Forge_Rollback_end", "Rollback alla fine",
                          "Riporta la rollback bar alla fine dell'albero (tutte le feature attive)"),
     )
+
+
+class _RadialMenuCommand:
+    def GetResources(self):
+        return {
+            "Pixmap": icon_path("Forge_RadialMenu"),
+            "MenuText": "Menu radiale",
+            "ToolTip": "Menu circolare con i comandi del contesto corrente (tasto S con le "
+            "impostazioni stile SolidWorks)",
+        }
+
+    def IsActive(self):
+        return FreeCADGui.ActiveDocument is not None
+
+    def Activated(self):
+        from forgelib.ui.radial import show_radial_menu
+
+        show_radial_menu()
+
+
+def register_radial():
+    FreeCADGui.addCommand("Forge_RadialMenu", _RadialMenuCommand())

@@ -7,7 +7,7 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
 
 - **Fase 0 — Setup: completata.** Build locale funzionante, baseline dei test registrata.
 - **Fase 1 — Analisi del divario: completata.** `GAP_ANALYSIS.md`; ordine milestone in `DECISIONS.md`.
-- **M1 — Interfaccia unificata: in corso.**
+- **M1 — Interfaccia unificata: completata** (tag `forge-m1`).
   - [x] M1.1 Modulo `src/Mod/Forge` (solo Python) registrato nella build; workbench "Forge" con command
         manager a schede (Schizzo, Feature, Superfici, Valuta, Assieme, Tavola) e cambio scheda
         automatico in base al contesto (tavola attiva, schizzo in modifica, assieme attivo).
@@ -22,7 +22,8 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         indietro/avanti/fine nella scheda Feature (basati su `Body.Tip`, annullabili).
         Limiti: le cartelle dentro un Body non sono supportate da PartDesign (non implementate); il riordino
         resta quello di FreeCAD (`PartDesign_MoveFeature`, trascinamento nell'albero) che già controlla le dipendenze.
-  - [ ] M1.6 Menu radiale contestuale / mouse gestures.
+  - [x] M1.6 Menu radiale contestuale (comando `Forge_RadialMenu`, tasto S con le impostazioni SolidWorks).
+        Le mouse gestures restano quelle dello stile di navigazione "Gesture" di FreeCAD (non replicate).
 
 ## Ambiente e comandi (Windows locale)
 
@@ -61,7 +62,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M1.6: menu radiale contestuale (tasto S / gesto del mouse).
+M3 — Robustezza ed errori delle feature: suite di modelli "difficili", messaggi d'errore comprensibili.
 
 ## Problemi noti
 
@@ -119,4 +120,10 @@ default vero), `LastTab` (stringa).
 3. Scheda Feature: i pulsanti con le frecce (indietro, avanti, fine) spostano la posizione di una feature o fino alla fine.
 4. Ctrl+Z annulla l'ultimo spostamento del rollback.
 5. Senza corpo attivo il cursore non compare.
+
+### M1.6 — Menu radiale
+1. Con un documento aperto premere S (dopo aver applicato le impostazioni SolidWorks) oppure menu Forge → Menu radiale.
+2. Attorno al cursore compare un anello con 8 comandi: in una parte schizzo/estrusione/tasca/foro/raccordo/smusso/misura/normale a;
+   dentro uno schizzo quota, linea, rettangolo, arco, taglia, costruzione, coincidente, chiudi schizzo; in una tavola i comandi TechDraw.
+3. Click su un'icona: il menu si chiude ed esegue il comando. Esc, S o click fuori: si chiude senza fare nulla.
 

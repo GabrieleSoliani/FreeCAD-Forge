@@ -61,7 +61,11 @@ class ForgeWorkbench(Workbench):
             commands, _ = catalog.resolve_commands(tab.commands, available)
             if commands:
                 self.appendMenu(["&Forge", tab.label], commands)
-        self.appendMenu("&Forge", ["Separator"] + forge_commands.SETTINGS_COMMANDS)
+        self.appendMenu(
+            "&Forge",
+            ["Separator"] + forge_commands.MENU_COMMANDS + ["Separator"]
+            + forge_commands.SETTINGS_COMMANDS,
+        )
 
     def Activated(self):
         from forgelib.ui import catalog

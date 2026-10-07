@@ -198,3 +198,23 @@ class TestRollback(unittest.TestCase):
         self.assertIs(self.body.Tip, self.pad)
         self.doc.undo()
         self.assertIs(self.body.Tip, self.pocket)
+
+
+class TestRadial(unittest.TestCase):
+    def test_ring_positions(self):
+        from forgelib.ui.radial import ring_positions
+
+        self.assertEqual(ring_positions(4, 10), [(0, -10), (10, 0), (0, 10), (-10, 0)])
+        for x, y in ring_positions(8, 78):
+            self.assertAlmostEqual((x * x + y * y) ** 0.5, 78, delta=1)
+
+    def test_context_mapping(self):
+        from forgelib.ui.radial import RADIAL_ITEMS, radial_context
+
+        self.assertEqual(radial_context(Context()), "part")
+        self.assertEqual(radial_context(Context(sketch_in_edit=True)), "sketch")
+        self.assertEqual(radial_context(Context(drawing_page_active=True)), "drawing")
+        self.assertEqual(radial_context(Context(assembly_active=True)), "assembly")
+        for key, items in RADIAL_ITEMS.items():
+            self.assertEqual(len(items), len(set(items)), key)
+            self.assertLessEqual(len(items), 8, key)
