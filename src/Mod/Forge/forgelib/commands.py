@@ -57,6 +57,9 @@ def register():
     from forgelib import sketch_blocks_gui
 
     sketch_blocks_gui.register()
+    from forgelib.features import sketch3d
+
+    sketch3d.register()
 
 
 def offer_settings_once():

@@ -38,7 +38,7 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
   - [x] Comandi "Rileva interferenze" (schede Valuta e Assieme) e "Analisi di sformo" (scheda Valuta).
         Parametri: `Clearance` (gioco minimo, mm), `MinDraftAngle` (gradi).
 
-- **M2 — Schizzo: in corso.**
+- **M2 — Schizzo: completata** (tag `forge-m2`; M2.2 rimandata).
   - [x] M2.1 Diagnosi schizzo (`forgelib/sketch_doctor.py`, comando "Diagnosi schizzo" nella scheda Schizzo e nella
         toolbar Vincoli): stato (gradi di libertà, conflitti, ridondanze, malformati) e correzioni verificate una per una
         disattivando temporaneamente ciascun vincolo sospetto; quote proposte per prime; applicazione annullabile.
@@ -46,7 +46,9 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         comportamento solo visivo; FreeCAD ha già vincoli automatici e snap). Resta in GAP_ANALYSIS.
   - [x] M2.3 Blocchi di schizzo (`forgelib/sketch_blocks.py`): "Salva blocco" (spigoli selezionati + vincoli interni,
         file JSON in `<dati utente>/Forge/Blocchi`) e "Inserisci blocco" nella toolbar Disegno in modifica.
-  - [ ] M2.4 Schizzo 3D (versione ridotta).
+  - [x] M2.4 Schizzo 3D ridotto (`forgelib/features/sketch3d.py`, comando "Schizzo 3D" nella scheda Schizzo): polilinea
+        o spline 3D da punti/vertici selezionati, aperta o chiusa, raccordi agli spigoli; usabile come percorso di sweep.
+        Limite: nessun vincolo 3D tra entità (si modificano i punti nelle proprietà, anche con espressioni).
 
 ## Ambiente e comandi (Windows locale)
 
@@ -85,7 +87,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M2.4 schizzo 3D in versione ridotta (polilinea/spline 3D da punti o vertici selezionati, usabile come percorso).
+M5 — Lamiera (integrazione dell'addon SheetMetal, GPL) e profilati strutturali.
 
 ## Problemi noti
 
@@ -175,4 +177,9 @@ default vero), `LastTab` (stringa).
    Disegno → "Salva blocco", nome "asola".
 2. In un altro schizzo → "Inserisci blocco" → scegliere "asola": compare nell'origine con forma e vincoli interni;
    trascinandola si sposta rigidamente.
+
+### M2.4 — Schizzo 3D
+1. Scheda Schizzo → Schizzo 3D senza selezione: compare un percorso 3D di esempio (3 punti). Nelle proprietà modificare
+   Points, Mode (Polilinea/Spline), Closed, BendRadius e verificare l'aggiornamento.
+2. Selezionare 3–4 vertici di un solido in ordine e rieseguire il comando: la polilinea li collega nell'ordine scelto.
 

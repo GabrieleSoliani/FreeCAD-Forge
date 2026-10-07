@@ -73,6 +73,7 @@ TABS = (
         (
             "PartDesign_NewSketch",
             "Sketcher_EditSketch",
+            "Forge_Sketch3D",
             SEPARATOR,
             "Sketcher_MapSketch",
             "Sketcher_ReorientSketch",
