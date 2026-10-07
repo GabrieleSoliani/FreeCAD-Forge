@@ -7,4 +7,5 @@ FreeCAD.__unit_test__ += [
     "ForgeTests.TestForgeApp",
     "ForgeTests.TestForgeRobustness",
     "ForgeTests.TestForgeDiagnostics",
+    "ForgeTests.TestForgeExamples",
 ]

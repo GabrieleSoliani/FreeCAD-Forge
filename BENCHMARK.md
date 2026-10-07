@@ -25,3 +25,23 @@ Per ogni scenario: passaggi necessari (azioni dell'utente) e fallimenti/esiti sb
 | Sformo 60° sui lati | Errore con **messaggio vuoto** | Errore con spiegazione |
 
 Fallimenti silenziosi (risultato sbagliato senza errore) su questa suite: **standard 3, Forge 0**.
+
+## M3.3 — Modelli di riferimento (`forge_examples/`)
+
+Tutti costruiti senza errori, con volume uguale al calcolo analitico (tolleranza 1e-6, molla 3%).
+Tempo di ricalcolo completo (tutte le feature marcate da ricalcolare), PC locale, build RelWithDebInfo:
+
+| Modello | Feature | Ricalcolo |
+|---|---|---|
+| flangia | 5 | ~60–80 ms |
+| staffa_a_L | 3 | ~50 ms |
+| albero_a_gradini | 2 | ~11–15 ms |
+| scatola_con_guscio | 3 | ~8–50 ms |
+| molla | 1 | ~25 ms |
+
+Ricalcolo incrementale: FreeCAD ricalcola già solo le feature "toccate" e quelle dipendenti; su modelli
+di queste dimensioni non c'è un collo di bottiglia da ottimizzare. Nessuna modifica in questo ambito (limite
+documentato: per modelli grandi andrebbe profilato caso per caso).
+
+Nota per gli script: una serie (PolarPattern ecc.) creata con `body.newObject` senza `Originals` non
+diventa `Tip` del corpo; il comando GUI lo fa. Negli script impostare `body.Tip = serie`.

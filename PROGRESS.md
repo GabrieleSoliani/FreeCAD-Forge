@@ -8,13 +8,13 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
 - **Fase 0 — Setup: completata.** Build locale funzionante, baseline dei test registrata.
 - **Fase 1 — Analisi del divario: completata.** `GAP_ANALYSIS.md`; ordine milestone in `DECISIONS.md`.
 - **M1 — Interfaccia unificata: completata** (tag `forge-m1`).
-- **M3 — Robustezza ed errori: in corso.**
+- **M3 — Robustezza ed errori: completata** (tag `forge-m3`).
   - [x] M3.1 Patch al core: raccordi/smussi/gusci non validi o senza effetto ora danno errore; sformo con
         messaggio (vedi `CORE_PATCHES.md`, `BENCHMARK.md`, `ForgeTests/TestForgeRobustness.py`).
   - [x] M3.2 Diagnostica in italiano (`forgelib/diagnostics.py`): spiegazioni, suggerimenti con raggio/spessore
         massimo calcolato, feature senza effetto, corpi divisi; comando "Diagnostica feature" (scheda Valuta) e
         avvisi automatici nell'area notifiche dopo ogni ricalcolo in Forge.
-  - [ ] M3.3 Suite di esempi `forge_examples/` e tempi di ricalcolo.
+  - [x] M3.3 Modelli di riferimento in `forge_examples/` (5 esercizi, volumi verificati) e tempi di ricalcolo in `BENCHMARK.md`.
   - [x] M1.1 Modulo `src/Mod/Forge` (solo Python) registrato nella build; workbench "Forge" con command
         manager a schede (Schizzo, Feature, Superfici, Valuta, Assieme, Tavola) e cambio scheda
         automatico in base al contesto (tavola attiva, schizzo in modifica, assieme attivo).
@@ -69,8 +69,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M3.3: suite più ampia di modelli "difficili" in `forge_examples/` (esercizi tipo tutorial) e misura
-dei tempi di ricalcolo; poi merge da upstream (fine della seconda milestone).
+Merge da upstream (dopo 2 milestone), poi M8 parziale: rilevamento interferenze e analisi di sformo.
 
 ## Problemi noti
 
