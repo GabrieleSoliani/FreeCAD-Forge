@@ -302,3 +302,43 @@ class TestForgeRadial(unittest.TestCase):
             FreeCADGui.updateGui()
         finally:
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestForgeDiagnosticsGui(unittest.TestCase):
+    def setUp(self):
+        self.previous = FreeCADGui.activeWorkbench().name()
+        FreeCADGui.activateWorkbench("ForgeWorkbench")
+        FreeCADGui.getWorkbench("ForgeWorkbench")._manager._timer.stop()
+        from ForgeTests import models
+
+        self.doc = FreeCAD.newDocument("ForgeDiagGui")
+        body = models.new_body(self.doc)
+        pad = models.pad(body, models.add_rectangle(models.sketch_on(body, "S"), 0, 0, 20, 10), 10)
+        self.doc.recompute()
+        self.fillet = body.newObject("PartDesign::Fillet", "Fillet")
+        self.fillet.Base = (pad, ["Edge1", "Edge2"])
+        self.fillet.Radius = 30
+        self.doc.recompute()
+
+    def tearDown(self):
+        FreeCAD.closeDocument(self.doc.Name)
+        FreeCADGui.activateWorkbench(self.previous)
+
+    def test_reporter_records_new_problems(self):
+        from forgelib import commands
+
+        self.assertIsNotNone(commands.reporter)
+        commands.reporter.slotRecomputedDocument(self.doc)
+        self.assertIn("Fillet", {name for name, _ in commands.reporter._reported[self.doc.Name]})
+
+    def test_show_diagnostics_selects_geometry(self):
+        from forgelib import commands, diagnostics
+
+        found = diagnostics.diagnose(self.doc, suggest=True)
+        self.assertEqual(len(found), 1)
+        box = commands.show_diagnostics(found)
+        FreeCADGui.updateGui()
+        selected = FreeCADGui.Selection.getSelectionEx()
+        self.assertEqual(len(selected), 1)
+        self.assertEqual(sorted(selected[0].SubElementNames), ["Edge1", "Edge2"])
+        box.close()

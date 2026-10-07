@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- Icona originale di FreeCAD Forge (diagnostica feature). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <circle cx="26" cy="26" r="18" fill="#fff7e6" stroke="#5b6b7a" stroke-width="6"/>
+  <path d="M39 39l17 17" stroke="#5b6b7a" stroke-width="9" stroke-linecap="round"/>
+  <path d="M26 14v15" stroke="#d9822b" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="26" cy="37" r="3.5" fill="#d9822b"/>
+</svg>

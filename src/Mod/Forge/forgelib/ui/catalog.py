@@ -208,6 +208,7 @@ TABS = (
             "Std_MassProperties",
             SEPARATOR,
             "Part_CheckGeometry",
+            "Forge_Diagnostics",
             SEPARATOR,
             "Part_SectionCut",
             "Std_ToggleClipPlane",

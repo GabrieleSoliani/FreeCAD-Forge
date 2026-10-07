@@ -9,6 +9,7 @@ SET(Forge_SRCS
 SET(ForgeLib_SRCS
     forgelib/__init__.py
     forgelib/commands.py
+    forgelib/diagnostics.py
     forgelib/rollback.py
     forgelib/settings.py
     forgelib/ui/__init__.py
@@ -25,6 +26,7 @@ SET(ForgeTests_SRCS
     ForgeTests/TestForgeGui.py
     ForgeTests/models.py
     ForgeTests/TestForgeRobustness.py
+    ForgeTests/TestForgeDiagnostics.py
 )
 
 SET(Forge_Icons
@@ -33,6 +35,7 @@ SET(Forge_Icons
     Resources/icons/Forge_Rollback_next.svg
     Resources/icons/Forge_Rollback_end.svg
     Resources/icons/Forge_RadialMenu.svg
+    Resources/icons/Forge_Diagnostics.svg
 )
 
 SET(Forge_ALL ${Forge_SRCS} ${ForgeLib_SRCS} ${ForgeTests_SRCS} ${Forge_Icons})

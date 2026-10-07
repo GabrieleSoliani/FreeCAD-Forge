@@ -8,6 +8,13 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
 - **Fase 0 — Setup: completata.** Build locale funzionante, baseline dei test registrata.
 - **Fase 1 — Analisi del divario: completata.** `GAP_ANALYSIS.md`; ordine milestone in `DECISIONS.md`.
 - **M1 — Interfaccia unificata: completata** (tag `forge-m1`).
+- **M3 — Robustezza ed errori: in corso.**
+  - [x] M3.1 Patch al core: raccordi/smussi/gusci non validi o senza effetto ora danno errore; sformo con
+        messaggio (vedi `CORE_PATCHES.md`, `BENCHMARK.md`, `ForgeTests/TestForgeRobustness.py`).
+  - [x] M3.2 Diagnostica in italiano (`forgelib/diagnostics.py`): spiegazioni, suggerimenti con raggio/spessore
+        massimo calcolato, feature senza effetto, corpi divisi; comando "Diagnostica feature" (scheda Valuta) e
+        avvisi automatici nell'area notifiche dopo ogni ricalcolo in Forge.
+  - [ ] M3.3 Suite di esempi `forge_examples/` e tempi di ricalcolo.
   - [x] M1.1 Modulo `src/Mod/Forge` (solo Python) registrato nella build; workbench "Forge" con command
         manager a schede (Schizzo, Feature, Superfici, Valuta, Assieme, Tavola) e cambio scheda
         automatico in base al contesto (tavola attiva, schizzo in modifica, assieme attivo).
@@ -62,7 +69,8 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M3 — Robustezza ed errori delle feature: suite di modelli "difficili", messaggi d'errore comprensibili.
+M3.3: suite più ampia di modelli "difficili" in `forge_examples/` (esercizi tipo tutorial) e misura
+dei tempi di ricalcolo; poi merge da upstream (fine della seconda milestone).
 
 ## Problemi noti
 
@@ -126,4 +134,11 @@ default vero), `LastTab` (stringa).
 2. Attorno al cursore compare un anello con 8 comandi: in una parte schizzo/estrusione/tasca/foro/raccordo/smusso/misura/normale a;
    dentro uno schizzo quota, linea, rettangolo, arco, taglia, costruzione, coincidente, chiudi schizzo; in una tavola i comandi TechDraw.
 3. Click su un'icona: il menu si chiude ed esegue il comando. Esc, S o click fuori: si chiude senza fare nulla.
+
+### M3.2 — Diagnostica feature
+1. In Forge, blocco 20×10×10, raccordo r=6 su tutti gli spigoli: la feature va in errore e nell'area notifiche
+   compare "Forge: Fillet: Il raccordo non si può costruire con questo raggio…".
+2. Scheda Valuta → Diagnostica feature: finestra con "Il raggio massimo applicabile è circa 4.95 mm" (o simile);
+   gli spigoli del raccordo risultano selezionati nella vista.
+3. Una tasca con lo schizzo fuori dal pezzo: avviso "La feature non rimuove materiale…".
 

@@ -8,7 +8,7 @@ from PySide import QtCore, QtWidgets
 from forgelib import settings
 
 SETTINGS_COMMANDS = ["Forge_ApplySolidWorksSettings", "Forge_RevertSettings"]
-MENU_COMMANDS = ["Forge_RadialMenu"]
+MENU_COMMANDS = ["Forge_RadialMenu", "Forge_Diagnostics"]
 
 
 class _ApplySettings:
@@ -47,6 +47,7 @@ def register():
     FreeCADGui.addCommand("Forge_RevertSettings", _RevertSettings())
     register_rollback()
     register_radial()
+    register_diagnostics()
 
 
 def offer_settings_once():
@@ -169,3 +170,99 @@ class _RadialMenuCommand:
 
 def register_radial():
     FreeCADGui.addCommand("Forge_RadialMenu", _RadialMenuCommand())
+
+
+class _DiagnosticsCommand:
+    def GetResources(self):
+        return {
+            "Pixmap": icon_path("Forge_Diagnostics"),
+            "MenuText": "Diagnostica feature",
+            "ToolTip": "Spiega in italiano gli errori delle feature, segnala le feature senza "
+            "effetto e propone valori applicabili (raggio, spessore)",
+        }
+
+    def IsActive(self):
+        return FreeCAD.ActiveDocument is not None
+
+    def Activated(self):
+        from forgelib import diagnostics
+
+        doc = FreeCAD.ActiveDocument
+        found = diagnostics.diagnose(doc, suggest=True)
+        show_diagnostics(found)
+
+
+def show_diagnostics(found):
+    """Mostra l'elenco e seleziona la geometria coinvolta nel primo problema."""
+    if not found:
+        QtWidgets.QMessageBox.information(
+            FreeCADGui.getMainWindow(), "Diagnostica feature", "Nessun problema trovato."
+        )
+        return
+    FreeCADGui.Selection.clearSelection()
+    doc = FreeCAD.ActiveDocument
+    for obj_name, sub in found[0].refs:
+        obj = doc.getObject(obj_name)
+        if obj is not None:
+            FreeCADGui.Selection.addSelection(obj, sub)
+    lines = []
+    for diagnostic in found:
+        line = f"[{diagnostic.severity}] {diagnostic.text()}"
+        if diagnostic.raw:
+            line += f"\n    (messaggio originale: {diagnostic.raw})"
+        lines.append(line)
+    box = QtWidgets.QMessageBox(FreeCADGui.getMainWindow())
+    box.setWindowTitle("Diagnostica feature")
+    box.setIcon(QtWidgets.QMessageBox.Warning)
+    box.setText(f"Problemi trovati: {len(found)}. La geometria del primo è selezionata.")
+    box.setDetailedText("\n\n".join(lines))
+    box.setInformativeText(found[0].text())
+    box.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+    box.open()
+    return box
+
+
+class RecomputeReporter:
+    """Dopo ogni ricalcolo, in Forge, segnala nell'area notifiche i problemi nuovi."""
+
+    def __init__(self):
+        self._reported = {}
+        self.enabled = True
+
+    def slotRecomputedDocument(self, doc):
+        if not self.enabled:
+            return
+        try:
+            if FreeCADGui.activeWorkbench().name() != "ForgeWorkbench":
+                return
+            from forgelib import diagnostics
+
+            found = diagnostics.diagnose(doc)
+        except Exception as err:
+            FreeCAD.Console.PrintLog(f"Forge: diagnostica non riuscita: {err}\n")
+            return
+        current = {(d.name, d.message) for d in found}
+        previous = self._reported.get(doc.Name, set())
+        for diagnostic in found:
+            if (diagnostic.name, diagnostic.message) in previous:
+                continue
+            if diagnostic.severity == diagnostics.INFO:
+                continue
+            FreeCAD.Console.PrintWarning(
+                f"Forge: {diagnostic.text()} (Valuta → Diagnostica feature per i dettagli)\n"
+            )
+        self._reported[doc.Name] = current
+
+    def slotDeletedDocument(self, doc):
+        self._reported.pop(doc.Name, None)
+
+
+reporter = None
+
+
+def register_diagnostics():
+    global reporter
+    FreeCADGui.addCommand("Forge_Diagnostics", _DiagnosticsCommand())
+    if reporter is None:
+        reporter = RecomputeReporter()
+        FreeCAD.addDocumentObserver(reporter)
