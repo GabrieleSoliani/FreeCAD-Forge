@@ -253,6 +253,19 @@ TABS = (
         ),
     ),
     Tab(
+        "weldments",
+        "Saldature",
+        (
+            "Forge_Sketch3D",
+            "PartDesign_NewSketch",
+            SEPARATOR,
+            "Forge_StructuralMember",
+            "Forge_CutList",
+            SEPARATOR,
+            "Forge_Interference",
+        ),
+    ),
+    Tab(
         "evaluate",
         "Valuta",
         (

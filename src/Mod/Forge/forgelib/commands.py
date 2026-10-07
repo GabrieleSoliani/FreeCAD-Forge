@@ -63,6 +63,9 @@ def register():
     from forgelib import sheetmetal_gui
 
     sheetmetal_gui.register()
+    from forgelib import structural_gui
+
+    structural_gui.register()
 
 
 def offer_settings_once():

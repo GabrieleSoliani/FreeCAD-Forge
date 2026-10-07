@@ -28,7 +28,7 @@ class TestForgeExamples(unittest.TestCase):
             self.assertEqual(diagnostics.diagnose(doc), [])
             shape = body.Shape
             self.assertTrue(shape.isValid())
-            self.assertEqual(len(shape.Solids), 1)
+            self.assertEqual(len(shape.Solids), result.get("solids", 1))
             if result["volume"] is not None:
                 tolerance = result.get("tolerance", 1e-6)
                 self.assertAlmostEqual(shape.Volume, result["volume"], delta=tolerance * result["volume"])
@@ -49,6 +49,16 @@ class TestForgeExamples(unittest.TestCase):
 
     def test_molla(self):
         self._check("molla")
+
+    def test_telaio_saldato(self):
+        self._check("telaio_saldato")
+
+    def test_staffa_lamiera(self):
+        try:
+            import SheetMetalCmd  # noqa: F401
+        except ImportError:
+            self.skipTest("SheetMetal non compilato")
+        self._check("staffa_lamiera")
 
     @classmethod
     def tearDownClass(cls):

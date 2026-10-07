@@ -50,11 +50,14 @@ Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2
         o spline 3D da punti/vertici selezionati, aperta o chiusa, raccordi agli spigoli; usabile come percorso di sweep.
         Limite: nessun vincolo 3D tra entità (si modificano i punti nelle proprietà, anche con espressioni).
 
-- **M5 — Lamiera e saldature: in corso.**
+- **M5 — Lamiera e saldature: completata** (tag `forge-m5`).
   - [x] M5.1 Lamiera: addon SheetMetal (LGPL) integrato in `src/Mod/SheetMetal` (vedi `THIRD_PARTY.md`); scheda Forge
         "Lamiera" con tutti i suoi comandi; `forgelib/sheetmetal.py` con tabella di piega (tolleranza/deduzione, fattore K
         dello sviluppo) ed esportazione DXF dello sviluppo; comandi "Tabella di piega" ed "Esporta sviluppo DXF".
-  - [ ] M5.2 Profilati strutturali con libreria UNI/EN, rifilatura, distinta di taglio.
+  - [x] M5.2 Profilati strutturali (`forgelib/features/profiles.py`, `structural.py`): libreria EN (IPE, HEA, HEB, tubi
+        quadri/rettangolari e tondi, angolari, piatti) con aree verificate sulle formule di norma; membri lungo schizzi o
+        schizzi 3D con taglio a mitra; distinta di taglio (lunghezze asse/punta-punta, angoli, massa) in un foglio di calcolo;
+        scheda "Saldature". Limiti: niente giunzioni a T/rifilature contro altri membri, niente spigoli curvi, niente UPN.
 
 ## Ambiente e comandi (Windows locale)
 
@@ -93,7 +96,7 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-M5.2 profilati strutturali (saldature).
+Merge da upstream (dopo M2 e M5), poi M6 — Assiemi (accoppiamenti avanzati, pattern/specchia componenti, viteria).
 
 ## Problemi noti
 
@@ -194,4 +197,9 @@ default vero), `LastTab` (stringa).
    (AddWall); selezionare la faccia grande → "Sviluppa" (Unfold).
 2. Selezionare lo sviluppo → "Tabella di piega": compare un foglio di calcolo con angolo, raggio, K, tolleranza, deduzione.
 3. Selezionare lo sviluppo → "Esporta sviluppo DXF": aprire il file in un visualizzatore DXF (contorno + linee di piega).
+
+### M5.2 — Saldature
+1. Scheda Saldature → Schizzo 3D; impostare Points a un rettangolo e Closed = vero. Selezionarlo → Profilato strutturale:
+   compaiono 4 tubi 40×40×3 tagliati a 45° agli spigoli. Cambiare Family/Size (es. IPE 100) e Rotation nelle proprietà.
+2. Distinta di taglio: foglio "Distinta di taglio" con posizione, profilo, lunghezze, angoli di taglio e massa (con totale).
 

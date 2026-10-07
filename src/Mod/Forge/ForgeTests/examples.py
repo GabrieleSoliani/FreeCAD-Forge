@@ -151,10 +151,43 @@ def spring(doc):
     return {"body": body, "volume": expected, "features": [helix], "tolerance": 0.03}
 
 
+def welded_frame(doc):
+    """Telaio saldato 1000×600 in tubo quadro 40×40×3 con tagli a mitra e due traversi IPE 100."""
+    from forgelib.features import profiles, sketch3d, structural
+
+    outline = sketch3d.make_sketch3d(
+        doc, [(0, 0, 0), (1000, 0, 0), (1000, 600, 0), (0, 600, 0)], closed=True, name="Perimetro")
+    frame = structural.make_member(doc, outline, "Tubo quadro/rett.", "40x40x3", name="Telaio")
+    doc.recompute()
+    area = profiles.nominal_area("Tubo quadro/rett.", "40x40x3")
+    return {"body": frame, "volume": area * 3200, "features": [outline, frame], "solids": 4}
+
+
+def sheet_metal_bracket(doc):
+    """Staffa in lamiera sp. 2: base 100×50 e ala a 90° di 20 mm con raggio interno 1."""
+    import math
+
+    from forgelib import sheetmetal
+
+    profile = doc.addObject("Sketcher::SketchObject", "ProfiloLamiera")
+    models.add_rectangle(profile, 0, 0, 100, 50)
+    doc.recompute()
+    base = sheetmetal.base_flange(doc, profile, 2, 1)
+    doc.recompute()
+    edge = [f"Edge{i + 1}" for i, e in enumerate(base.Shape.Edges)
+            if abs(e.CenterOfMass.y) < 1e-6 and abs(e.CenterOfMass.z - 2) < 1e-6]
+    wall = sheetmetal.edge_flange(doc, base, edge, 20, 1)
+    doc.recompute()
+    expected = 100 * 50 * 2 + 20 * 2 * 100 + math.pi / 4 * (3**2 - 1) * 100
+    return {"body": wall, "volume": expected, "features": [base, wall]}
+
+
 EXAMPLES = {
     "flangia": flange,
     "staffa_a_L": l_bracket,
     "albero_a_gradini": stepped_shaft,
     "scatola_con_guscio": shelled_box,
     "molla": spring,
+    "telaio_saldato": welded_frame,
+    "staffa_lamiera": sheet_metal_bracket,
 }

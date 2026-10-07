@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- Icona originale di FreeCAD Forge (profilato strutturale). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <path d="M8 8h48v8H36v32h20v8H8v-8h20V16H8z" fill="#9fb3c8" stroke="#1f2a33" stroke-width="3" stroke-linejoin="round"/>
+</svg>

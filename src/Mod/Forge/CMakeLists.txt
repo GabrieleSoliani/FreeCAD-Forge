@@ -18,6 +18,9 @@ SET(ForgeLib_SRCS
     forgelib/sketch_blocks_gui.py
     forgelib/features/__init__.py
     forgelib/features/sketch3d.py
+    forgelib/features/profiles.py
+    forgelib/features/structural.py
+    forgelib/structural_gui.py
     forgelib/sheetmetal.py
     forgelib/sheetmetal_gui.py
     forgelib/rollback.py
@@ -45,6 +48,7 @@ SET(ForgeTests_SRCS
     ForgeTests/TestForgeSketchBlocks.py
     ForgeTests/TestForgeSketch3D.py
     ForgeTests/TestForgeSheetMetal.py
+    ForgeTests/TestForgeStructural.py
 )
 
 SET(Forge_Icons
@@ -62,6 +66,8 @@ SET(Forge_Icons
     Resources/icons/Forge_Sketch3D.svg
     Resources/icons/Forge_BendTable.svg
     Resources/icons/Forge_FlatDXF.svg
+    Resources/icons/Forge_StructuralMember.svg
+    Resources/icons/Forge_CutList.svg
 )
 
 SET(Forge_ALL ${Forge_SRCS} ${ForgeLib_SRCS} ${ForgeTests_SRCS} ${Forge_Icons})

@@ -32,7 +32,7 @@ class TestForgeWorkbench(unittest.TestCase):
     def test_core_commands_resolved(self):
         """Le schede che dipendono solo da moduli obbligatori devono essere complete."""
         available = set(FreeCADGui.listCommands())
-        for key in ("sketch", "features", "evaluate"):
+        for key in ("sketch", "features", "weldments", "evaluate"):
             for name, commands in catalog.tab_by_key(key).all_toolbars():
                 _, missing = catalog.resolve_commands(commands, available)
                 self.assertEqual(missing, [], name)

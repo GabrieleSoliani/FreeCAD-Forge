@@ -53,3 +53,10 @@ diventa `Tip` del corpo; il comando GUI lo fa. Negli script impostare `body.Tip 
 | Interferenze tra N componenti | Nessuno strumento: booleana "Comune" a mano per ogni coppia (N(N-1)/2 operazioni) | 1 comando, tutte le coppie, volumi e solidi evidenziati |
 | Analisi di sformo | Non disponibile | 1 comando (selezione + clic) |
 
+## M5 — Lamiera e saldature
+
+| Scenario | Standard: passaggi | Forge: passaggi |
+|---|---|---|
+| Staffa in lamiera con sviluppo e DXF | Non possibile senza installare un addon | Flangia base, flangia, sviluppa, esporta DXF (4 comandi), tabella di piega (1) |
+| Telaio saldato 4 tubi con mitra + distinta | ~12 operazioni manuali (4 sweep/estrusioni + 8 tagli con piani) e distinta a mano | Schizzo 3D + Profilato strutturale + Distinta di taglio (3 comandi) |
+

@@ -11,5 +11,7 @@ Modelli che riproducono esercizi tipici dei tutorial SolidWorks, costruiti da sc
 | `albero_a_gradini.FCStd` | Albero a gradini con smussi | Rivoluzione, smusso su spigoli circolari |
 | `scatola_con_guscio.FCStd` | Scatola raccordata svuotata | Estrusione, raccordo, guscio |
 | `molla.FCStd` | Molla elicoidale | Elica additiva |
+| `telaio_saldato.FCStd` | Telaio in tubo quadro 40×40×3 | Schizzo 3D, profilato strutturale con mitra |
+| `staffa_lamiera.FCStd` | Staffa in lamiera sp. 2 | Flangia base, flangia su bordo (SheetMetal) |
 
 Per rigenerarli: `pixi run build/relWithDebInfo/bin/FreeCADCmd.exe forge_examples/genera_esempi.py`

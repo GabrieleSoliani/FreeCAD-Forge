@@ -85,8 +85,8 @@ Legenda
 
 | Funzione | FreeCAD | Gravità | Sforzo | Note |
 |---|---|---|---|---|
-| Profilati strutturali da schizzo 3D | 🧩 | M | L | Addon "Frame"/BIM Profile; libreria EN parziale |
-| Rifilatura/estensione, cut list | ❌/🧩 | M | M | |
+| Profilati strutturali da schizzo 3D | ✅ Forge (ridotto) | — | — | Libreria EN, mitra, schizzo 3D (M2.4, M5.2); mancano giunzioni a T e UPN |
+| Rifilatura/estensione, cut list | 🟡 Forge | M | M | Distinta di taglio sì (M5.2); rifilatura contro altri membri no |
 
 ## 7. Assiemi
 

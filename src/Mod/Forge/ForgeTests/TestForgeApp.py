@@ -18,7 +18,8 @@ class TestCatalog(unittest.TestCase):
         keys = {tab.key for tab in catalog.TABS}
         self.assertEqual(
             keys,
-            {"sketch", "features", "surfaces", "sheetmetal", "evaluate", "assembly", "drawing"},
+            {"sketch", "features", "surfaces", "sheetmetal", "weldments", "evaluate", "assembly",
+             "drawing"},
         )
         self.assertIsNotNone(catalog.tab_by_key(catalog.DEFAULT_TAB))
         self.assertIsNone(catalog.tab_by_key("inesistente"))

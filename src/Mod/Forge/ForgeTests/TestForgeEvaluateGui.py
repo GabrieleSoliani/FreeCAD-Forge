@@ -165,3 +165,30 @@ class TestSheetMetalGui(unittest.TestCase):
         finally:
             FreeCADGui.Selection.clearSelection()
             FreeCAD.closeDocument(doc.Name)
+
+
+class TestStructuralGui(unittest.TestCase):
+    def test_cut_list_sheet(self):
+        from forgelib import structural_gui
+        from forgelib.features import sketch3d, structural
+
+        doc = FreeCAD.newDocument("ForgeStructuralGui")
+        try:
+            path = sketch3d.make_sketch3d(
+                doc, [(0, 0, 0), (1000, 0, 0), (1000, 600, 0), (0, 600, 0)], closed=True
+            )
+            doc.recompute()
+            FreeCADGui.Selection.clearSelection()
+            FreeCADGui.Selection.addSelection(path, ["Edge1", "Edge2"])
+            obj, edges = structural_gui.selected_path()
+            self.assertEqual((obj, edges), (path, ["Edge1", "Edge2"]))
+            member = structural.make_member(doc, path, "IPE", "100")
+            doc.recompute()
+            sheet, rows = structural_gui.make_cut_list_sheet(doc, [member])
+            self.assertEqual(rows, 4)
+            self.assertEqual(sheet.get("C2"), "IPE 100")
+            total = float(sheet.get("H6"))
+            self.assertAlmostEqual(total, 8.1 * 3.2, delta=0.4)
+        finally:
+            FreeCADGui.Selection.clearSelection()
+            FreeCAD.closeDocument(doc.Name)
