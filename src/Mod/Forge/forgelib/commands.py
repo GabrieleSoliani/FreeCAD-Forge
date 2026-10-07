@@ -171,9 +171,6 @@ class _RollbackCommand:
             rollback.to_end(body)
 
 
-ROLLBACK_COMMANDS = ["Forge_RollbackPrevious", "Forge_RollbackNext", "Forge_RollbackToEnd"]
-
-
 def register_rollback():
     FreeCADGui.addCommand(
         "Forge_RollbackPrevious",
@@ -269,11 +266,8 @@ class RecomputeReporter:
 
     def __init__(self):
         self._reported = {}
-        self.enabled = True
 
     def slotRecomputedDocument(self, doc):
-        if not self.enabled:
-            return
         try:
             if FreeCADGui.activeWorkbench().name() != "ForgeWorkbench":
                 return

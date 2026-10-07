@@ -121,9 +121,6 @@ class _CutListCommand:
             doc.commitTransaction()
 
 
-STRUCTURAL_COMMANDS = ["Forge_StructuralMember", "Forge_CutList"]
-
-
 def register():
     FreeCADGui.addCommand("Forge_StructuralMember", _MemberCommand())
     FreeCADGui.addCommand("Forge_CutList", _CutListCommand())

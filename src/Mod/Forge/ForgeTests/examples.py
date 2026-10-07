@@ -8,7 +8,6 @@ il corpo e il volume atteso (None se non esiste una formula semplice). Usate dai
 
 import math
 
-import FreeCAD
 import Part
 from FreeCAD import Vector
 

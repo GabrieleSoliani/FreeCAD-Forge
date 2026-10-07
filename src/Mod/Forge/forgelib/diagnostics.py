@@ -13,6 +13,8 @@ provando l'operazione sulla forma di partenza con una bisezione. Nessuna dipende
 import re
 from dataclasses import dataclass, field
 
+import FreeCAD
+
 ERROR = "errore"
 WARNING = "avviso"
 INFO = "info"
@@ -202,7 +204,7 @@ def numeric_suggestion(feature):
     if base is None or base.Shape.isNull() or not subs:
         return ""
     shape = base.Shape.copy()
-    shape.Placement = FreeCAD_identity()
+    shape.Placement = FreeCAD.Placement()
     try:
         elements = [shape.getElement(sub) for sub in subs]
     except Exception:
@@ -222,12 +224,6 @@ def numeric_suggestion(feature):
     if value is None:
         return f"Nessun valore di {what} funziona con questi riferimenti: prova a cambiarli."
     return f"Il {what} massimo applicabile è circa {_round_down(value):g} mm."
-
-
-def FreeCAD_identity():
-    import FreeCAD
-
-    return FreeCAD.Placement()
 
 
 def _is_partdesign_feature(obj):

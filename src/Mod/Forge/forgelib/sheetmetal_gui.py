@@ -97,9 +97,6 @@ class _ExportDxfCommand:
         FreeCAD.Console.PrintMessage(f"Forge: sviluppo esportato in {path}\n")
 
 
-SHEETMETAL_FORGE_COMMANDS = ["Forge_BendTable", "Forge_ExportFlatDXF"]
-
-
 def register():
     FreeCADGui.addCommand("Forge_BendTable", _BendTableCommand())
     FreeCADGui.addCommand("Forge_ExportFlatDXF", _ExportDxfCommand())

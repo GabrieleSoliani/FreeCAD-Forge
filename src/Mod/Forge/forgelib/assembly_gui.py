@@ -23,7 +23,7 @@ def active_container():
 def selected_circle():
     """(spigolo circolare in coordinate globali, forma globale dell'oggetto) dalla selezione."""
     for sel in FreeCADGui.Selection.getSelectionEx("", 0):
-        for sub_name, sub in zip(sel.SubElementNames, sel.SubObjects):
+        for sub in sel.SubObjects:
             if sub.ShapeType == "Edge" and sub.Curve.TypeId == "Part::GeomCircle":
                 from forgelib import evaluate
 

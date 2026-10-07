@@ -93,9 +93,6 @@ class _LibraryInsertCommand:
             doc.commitTransaction()
 
 
-PRODUCTIVITY_COMMANDS = ["Forge_PackAndGo", "Forge_LibraryAdd", "Forge_LibraryInsert"]
-
-
 def register():
     FreeCADGui.addCommand("Forge_PackAndGo", _PackAndGoCommand())
     FreeCADGui.addCommand("Forge_LibraryAdd", _LibraryAddCommand())

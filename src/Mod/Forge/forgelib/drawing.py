@@ -18,7 +18,6 @@ import FreeCAD
 from FreeCAD import Vector
 
 TEMPLATE = "A3_Landscape_ISO5457_advanced.svg"
-SHEET_W, SHEET_H = 420.0, 297.0
 # area utile per le tre viste ortogonali (sinistra della tavola, sopra il cartiglio)
 VIEWS_W, VIEWS_H = 250.0, 170.0
 GAP = 25.0

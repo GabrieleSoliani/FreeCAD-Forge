@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 """Dialogo "Diagnosi schizzo" (M2)."""
 
-import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtWidgets
 

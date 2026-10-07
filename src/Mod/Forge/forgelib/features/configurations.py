@@ -18,7 +18,7 @@ DEFAULT_NAME = "Standard"
 
 def _parse(value):
     """Valore memorizzato nella tabella → valore da assegnare alla proprietà."""
-    if isinstance(value, bool) or isinstance(value, (int, float)):
+    if isinstance(value, (int, float)):  # bool compreso
         return value
     text = str(value).strip()
     if text.lower() in ("true", "vero", "sì", "si", "soppressa", "soppresso"):
@@ -37,7 +37,7 @@ def _parse(value):
 
 def _store(value):
     """Valore di una proprietà → valore serializzabile in JSON."""
-    if isinstance(value, bool) or isinstance(value, (int, float, str)):
+    if isinstance(value, (int, float, str)):  # bool compreso
         return value
     if hasattr(value, "UserString"):
         return value.UserString

@@ -7,8 +7,6 @@ oggetti durante il ricalcolo. La specchiatura usa ``Part::Mirroring`` sul compon
 "opposta" del pezzo). Nessuna dipendenza dalla GUI.
 """
 
-import math
-
 import FreeCAD
 from FreeCAD import Vector
 
