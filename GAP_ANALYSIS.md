@@ -17,14 +17,14 @@ Legenda
 | Quota intelligente unica | ✅ | B | S | `Sketcher_Dimension`; manca qualche caso (quota tra arco e linea "max/min") |
 | Inferenze durante il disegno | 🟡 | M | M | Auto-vincoli presenti (`AutoConstraint.h`, `SnapManager`), mancano linee d'inferenza tratteggiate verso punti notevoli e allineamenti a distanza |
 | Colori di stato (sotto/completamente vincolato, conflitti) | ✅ | — | — | |
-| Diagnosi conflitti con proposta di soluzione (SketchXpert) | 🟡 | **A** | M | Elenco conflitti/ridondanti c'è (`getLastConflicting`), manca la proposta "elimina uno di questi" con anteprima |
+| Diagnosi conflitti con proposta di soluzione (SketchXpert) | ✅ Forge | — | — | "Diagnosi schizzo" con correzioni verificate (M2.1); niente anteprima grafica |
 | Trascinamento fluido di geometrie sottovincolate | 🟡 | M | M | Funziona ma salta / inverte archi; solutore `planegcs` |
 | Offset, trim, extend, split, fillet/chamfer di schizzo | ✅ | — | — | |
 | Specchia / pattern lineare e circolare in schizzo | ✅ | — | — | `Sketcher_Symmetry`, `Sketcher_RectangularArray`, `Sketcher_Rotate` |
 | Converti entità / interseca | ✅ | — | — | Geometria esterna + "intersezione" |
 | Testo nello schizzo | ✅ | — | — | `Sketcher_CreateText` (nuovo in upstream) |
-| Blocchi di schizzo | 🟡 | M | M | Esiste solo il vincolo "Block" (blocca), non i blocchi riutilizzabili |
-| Schizzo 3D | ❌ | M | L | Nessun equivalente; surrogato: Part Wire/Draft BSpline |
+| Blocchi di schizzo | ✅ Forge | — | — | Salva/inserisci blocco con vincoli interni (M2.3); non restano raggruppati dopo l'inserimento |
+| Schizzo 3D | 🟡 Forge | M | L | Polilinea/spline 3D parametrica (M2.4); niente vincoli 3D |
 | Equazioni/variabili nelle quote | ✅ | — | — | Espressioni ovunque |
 | Immagine di schizzo / tracciatura | ✅ | — | — | Image workbench |
 
@@ -34,10 +34,10 @@ Legenda
 |---|---|---|---|---|
 | Estrusione / taglio con condizioni finali (fino a superficie, offset, fino al prossimo) | ✅ | — | — | Pad/Pocket |
 | Rivoluzione, sweep, loft, elica | ✅ | — | — | Revolution/Groove, Pipe, Loft, Helix |
-| Raccordi costanti | ✅ | **A** | L | Robustezza bassa: fallimenti frequenti con catene tangenti e vertici a 3+ spigoli (OCC) → M3 |
+| Raccordi costanti | ✅ | M | L | Niente più solidi non validi accettati in silenzio, raggio massimo suggerito (M3); i limiti di OCC restano |
 | Raccordi variabili / a faccia / a set di raccordi | ❌ | M | L | Solo raggio costante (o variabile lineare in Part) |
 | Smussi distanza-distanza, distanza-angolo | ✅ | — | — | |
-| Svuotamento (shell) | 🟡 | **A** | L | `PartDesign::Thickness`: spesso fallisce su raccordi; nessun messaggio utile → M3 |
+| Svuotamento (shell) | ✅ | M | L | Errori espliciti per parete troppo spessa, spessore massimo suggerito (M3) |
 | Sformo | ✅ | M | M | Funziona, ma mancano analisi di sformo e linea di divisione |
 | Foro guidato (Hole Wizard) | 🟡 | M | M | ISO/UNC/... presenti; manca libreria UNI di lamature, foro "a gradino" multi-sezione, filettatura cosmetica in tavola |
 | Filettatura cosmetica | 🟡 | M | M | Solo dati sul foro; nessuna rappresentazione in vista/tavola |
@@ -49,10 +49,10 @@ Legenda
 | Scritte in rilievo/incise su superficie | 🟡 | M | M | ShapeString + Pad (piano); manca avvolgi su superficie curva |
 | Avvolgi (wrap) / deforma / flessione | ❌ | B | L | |
 | Instant3D (trascina quote nella vista) | ❌ | M | M | Mattone: `EditableDatumLabel` |
-| Rollback bar | 🟡 | **A** | M | Concetto = `Body.Tip`; manca la barra trascinabile nell'albero → M1 |
+| Rollback bar | ✅ Forge | B | M | Cursore e comandi sul corpo attivo (M1.5); non è dentro l'albero |
 | Riordino con controllo dipendenze | 🟡 | M | S | `PartDesign_MoveFeature` / drag nel tree con regole limitate |
 | Soppressione feature | ✅ | — | — | `SuppressibleExtension` |
-| Messaggi d'errore comprensibili | ❌ | **A** | M | Messaggi OCC grezzi ("BRep_API: command not done") → M3 |
+| Messaggi d'errore comprensibili | ✅ Forge | — | — | Diagnostica in italiano con suggerimenti (M3.2) |
 
 ## 3. Multi-corpo
 
@@ -173,14 +173,14 @@ Legenda
 
 | Funzione | FreeCAD | Gravità | Sforzo | Note |
 |---|---|---|---|---|
-| Ambiente unico senza cambio workbench | ❌ | **A** | M | Il cambio Part/PartDesign/Sketcher/Assembly/TechDraw è la prima fonte di attrito → M1 (`WorkbenchManipulator`) |
-| Command manager a schede contestuali | ❌ | **A** | M | Widget Qt proprio |
-| Albero feature con rollback bar, cartelle | 🟡 | **A** | M | Patch a `Tree.cpp` probabile |
+| Ambiente unico senza cambio workbench | ✅ Forge | — | — | Workbench Forge, schizzo in modifica senza cambio (M1) |
+| Command manager a schede contestuali | ✅ Forge | — | — | 8 schede con cambio automatico (M1) |
+| Albero feature con rollback bar, cartelle | 🟡 Forge | B | M | Rollback fuori dall'albero (M1.5); cartelle nel Body non supportate da PartDesign |
 | Pannello proprietà con anteprima e OK/Annulla | ✅ | — | — | Task panel + `PreviewExtension` |
 | Navigazione SolidWorks | ✅ | — | — | `SolidWorksNavigationStyle` |
-| Scorciatoie configurabili | ✅ | — | — | Preference pack Forge per impostarle in blocco |
-| Menu radiale / mouse gestures | ❌/🧩 | M | M | Addon "Pie Menu" |
-| Barra heads-up nella vista | 🟡 | M | S | Navigation cube + overlay; manca barra viste/sezione/stile |
+| Scorciatoie configurabili | ✅ Forge | — | — | Impostazioni SolidWorks applicabili/annullabili (M1.3) |
+| Menu radiale / mouse gestures | ✅ Forge (menu) | B | M | Menu radiale contestuale tasto S (M1.6); gesture: stile di navigazione "Gesture" di FreeCAD |
+| Barra heads-up nella vista | ✅ Forge | — | — | M1.4 |
 | Menu contestuale nella vista (quote/feature/schizzo) | 🟡 | M | S | |
 | Autosalvataggio con ripristino | ✅ | — | — | Recovery file già presenti |
 | Pack and Go | ✅ Forge (ridotto) | B | S | Dipendenze nella cartella del documento (M8) |
@@ -213,3 +213,24 @@ Criterio: impatto sull'uso quotidiano / sforzo, con le fondamenta (UI) prima per
 | 9 | **M8 — Resto della valutazione/produttività** | |
 
 Questo ordine è registrato in `DECISIONS.md` ed è rivedibile alla fine di ogni milestone.
+
+## Stato a fine lavoro (2026-10-07) e cosa resta da fare
+
+Legenda aggiornata: "✅ Forge" = colmato nel fork, "🟡 Forge" = colmato in parte. Tutte le milestone M1–M8 sono
+chiuse (tag `forge-m1` … `forge-m8`); tutti i divari di gravità **A** dell'analisi iniziale sono colmati.
+
+Cosa resta, in ordine di utilità stimata:
+
+| Area | Lavoro residuo | Sforzo | Note |
+|---|---|---|---|
+| Assiemi | Accoppiamenti larghezza/camma/slot, limiti generalizzati, smart mates con Alt-trascinamento, componenti flessibili | L | Richiede modifiche al solutore C++ (OndselSolver) |
+| Tavola | Importazione quote di modello, quotatura ordinata automatica, tabella fori, DWG | M–L | DWG solo con convertitore ODA esterno |
+| Schizzo | Linee d'inferenza durante il disegno (M2.2), vincoli nello schizzo 3D | M | C++ dello Sketcher, comportamento visivo |
+| Feature | Instant3D (maniglie di quota nella vista), serie da tabella/varianti, avvolgi/deforma/flessione, scritte su superfici curve | M–L | |
+| Saldature | Giunzioni a T e rifilature contro altri membri, profili UPN, membri su spigoli curvi | M | |
+| Lamiera | Algoritmo di sviluppo V2 dell'addon (richiede il pacchetto `networkx` nell'ambiente pixi) | S | Il V1 funziona ed è testato |
+| Interfaccia | Rollback bar dentro l'albero, cartelle nel Body, palette viste trascinabile, libreria trascinabile | M | Patch a `Tree.cpp` |
+| Valutazione | Analisi di curvatura/zebra | M | |
+| Produttività | Pack and Go con rinomina e dipendenze esterne alla cartella | S | |
+| Viteria | Filettatura modellata, altre norme (ISO 4026/4028, DIN 912 obsolete, ecc.) | S | |
+

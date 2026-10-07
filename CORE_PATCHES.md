@@ -14,3 +14,4 @@ Ogni patch al core è elencata qui con il motivo, per facilitare i merge da upst
 | `src/Mod/PartDesign/App/FeatureThickness.cpp` | Errore se il guscio è non valido o se non cambia il volume del solido | M3: con parete troppo spessa OCC restituiva un solido non valido o il solido originale, accettati in silenzio |
 | `src/Mod/PartDesign/App/FeatureDraft.cpp` | Messaggio esplicito quando OCC fallisce senza messaggio | M3: la feature andava in errore con testo vuoto |
 | `cMake/FreeCAD_Helpers/*.cmake`, `src/Mod/CMakeLists.txt` | Opzione `BUILD_SHEETMETAL` e `add_subdirectory(SheetMetal)` | M5: addon SheetMetal integrato come modulo (vedi `THIRD_PARTY.md`) |
+| `README.md` → `README.FreeCAD.md` | Il README originale di FreeCAD è stato rinominato; `README.md` descrive Forge in italiano | Consegna. In caso di conflitto al merge, applicare le modifiche upstream a `README.FreeCAD.md` |

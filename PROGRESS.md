@@ -3,7 +3,18 @@
 Leggere questo file per primo a ogni ripresa. Prompt completo del progetto: `FORGE_PROMPT.md`.
 Si lavora **solo in locale** sul PC Windows (niente cloud, vedi `DECISIONS.md` 2026-10-07).
 
-## Stato attuale (2026-10-07)
+## Stato attuale (2026-10-07): consegna
+
+**Tutte le milestone M1–M8 sono chiuse** (tag `forge-m1` … `forge-m8`, consegna `forge-1.0`). Build installata in
+`.pixi/envs/default/Library` (`pixi run freecad`). README in italiano: `README.md`. Lavoro residuo: fondo di
+`GAP_ANALYSIS.md`.
+
+Verifica finale (build RelWithDebInfo, 2026-10-07):
+- `FreeCADCmd -t 0`: 3687 test OK (baseline upstream 3558 + 129 test Forge), 38 saltati, 5 fallimenti attesi;
+- ctest: 23/26 come la baseline (i 3 falliti dipendono dal locale italiano);
+- GUI: `ForgeTests.TestForgeGui` 17 OK, `ForgeTests.TestForgeEvaluateGui` 13 OK, `TestPartDesignGui` 21 OK,
+  `TestSketcherGui` 50/53 come la baseline (3 test confrontano messaggi inglesi con l'interfaccia in italiano);
+- test Forge eseguiti anche dalla build installata.
 
 - **Fase 0 — Setup: completata.** Build locale funzionante, baseline dei test registrata.
 - **Fase 1 — Analisi del divario: completata.** `GAP_ANALYSIS.md`; ordine milestone in `DECISIONS.md`.
@@ -130,7 +141,9 @@ Test GUI Python che falliscono già in partenza per la **lingua italiana** dell'
 
 ## Prossimo passo
 
-Consegna: README.md in italiano, installazione locale (`pixi run install`), GAP_ANALYSIS aggiornato, test completi.
+1. Verifiche a video (sezione sotto) e feedback dell'utente.
+2. Dal lavoro residuo di `GAP_ANALYSIS.md`: accoppiamenti avanzati (solutore), quote di modello in tavola, inferenze di schizzo.
+3. Merge periodico da upstream (`git fetch upstream && git merge upstream/main`), ricompilare, rieseguire i test.
 
 ## Problemi noti
 
